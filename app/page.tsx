@@ -24,7 +24,6 @@ export default function Home() {
     }
   }, [isAuthenticated]);
 
-  // Animation variants
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -78,7 +77,6 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
-      {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center px-4 py-20">
         <div className="max-w-7xl mx-auto text-center">
           <motion.div
@@ -121,24 +119,9 @@ export default function Home() {
               </RegisterLink>
             </motion.div>
             
-            <motion.div 
-              variants={item}
-              className="mt-16 rounded-2xl border border-gray-200 dark:border-gray-800 overflow-hidden shadow-xl max-w-4xl mx-auto"
-            >
-              <div className="bg-gray-200 border-b border-gray-300 dark:border-gray-800 h-8 flex items-center px-4">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                </div>
-              </div>
-              <div className="bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 aspect-video" />
-            </motion.div>
           </motion.div>
         </div>
       </section>
-
-      {/* Features Section */}
       <section className="py-20 px-4 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-20">
@@ -184,8 +167,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Testimonials */}
       <section className="py-20 px-4 bg-gray-50 dark:bg-gray-950">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-20">
@@ -222,8 +203,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
       <section className="py-28 px-4">
         <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-blue-900/30 dark:to-emerald-900/30 rounded-3xl p-12">
           <motion.div
@@ -265,8 +244,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
-      {/* Footer */}
       <footer className="py-12 px-4 border-t border-gray-200 dark:border-gray-800">
         <div className="max-w-7xl mx-auto text-center">
           <p className="text-gray-600 dark:text-gray-400">
