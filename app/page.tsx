@@ -218,7 +218,7 @@ export default function Home() {
                 className="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-gray-100 dark:border-gray-800"
               >
                 <div className="text-2xl font-light italic text-gray-800 dark:text-gray-200">
-                  "{testimonial.quote}"
+                  {testimonial.quote}
                 </div>
                 <div className="mt-6">
                   <div className="font-medium">{testimonial.author}</div>
