@@ -119,13 +119,6 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </RegisterLink>
-              <Button 
-                size="lg" 
-                variant="outline"
-                className="px-8 py-6 text-lg border-gray-300 dark:border-gray-700"
-              >
-                View Demo
-              </Button>
             </motion.div>
             
             <motion.div 
