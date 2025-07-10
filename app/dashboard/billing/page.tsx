@@ -18,13 +18,55 @@ import {
 import { unstable_noStore as noStore } from "next/cache";
 
 const featureItems = [
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
-  { name: "Lorem Ipsum something" },
+  { 
+    name: "Unlimited Notes & Projects",
+    description: "Create as many notes and projects as you need with no restrictions"
+  },
+  { 
+    name: "AI-Powered Organization",
+    description: "Automatically categorize and tag notes using machine learning"
+  },
+  { 
+    name: "Advanced Search",
+    description: "Find anything instantly with OCR, image text recognition, and semantic search"
+  },
+  { 
+    name: "Version History",
+    description: "Access 90 days of revision history and restore previous versions"
+  },
+  { 
+    name: "Custom Templates",
+    description: "Create and save custom templates for recurring note formats"
+  },
+  { 
+    name: "Collaboration Tools",
+    description: "Real-time co-editing, comments, and task assignments"
+  },
+  { 
+    name: "End-to-End Encryption",
+    description: "Military-grade encryption for all your sensitive notes"
+  },
+  { 
+    name: "Priority Support",
+    description: "24-hour response time with dedicated support channel"
+  },
+  { 
+    name: "Multi-Device Sync",
+    description: "Instant sync across unlimited devices with offline access"
+  },
+  { 
+    name: "PDF Export & Sharing",
+    description: "Export to professional PDFs with custom branding options"
+  },
+  { 
+    name: "API Access",
+    description: "Integrate with other tools using our developer API"
+  },
+  { 
+    name: "Custom Domains",
+    description: "Use your own domain for shared notes and published content"
+  }
 ];
-
 async function getData(userId: string) {
   noStore();
   const data = await prisma.subscription.findUnique({
