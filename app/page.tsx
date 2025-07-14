@@ -332,7 +332,7 @@ export default function Home() {
                 className="bg-gray-50 dark:bg-gray-900 p-8 rounded-xl border border-gray-100 dark:border-gray-800"
               >
                 <div className="text-xl text-gray-800 dark:text-gray-200 italic">
-                  "{testimonial.quote}"
+                  {testimonial.quote}
                 </div>
                 <div className="mt-6 flex items-center">
                   <div className="mr-4">
