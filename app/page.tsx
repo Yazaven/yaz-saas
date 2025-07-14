@@ -1,256 +1,223 @@
-"use client";
-
-import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
-import { useKindeBrowserClient } from "@kinde-oss/kinde-auth-nextjs";
-import { useEffect } from "react";
-import { redirect } from "next/navigation";
-import { 
-  ArrowRight, 
-  LayoutDashboard, 
-  FileText, 
-  Users, 
-  Sparkles,
-  Check
-} from "lucide-react";
+// app/page.tsx
+import { ArrowRightIcon, ShieldCheckIcon, DocumentMagnifyingGlassIcon, BuildingLibraryIcon } from '@heroicons/react/24/outline';
 
 export default function Home() {
-  const { isAuthenticated } = useKindeBrowserClient();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      redirect("/dashboard");
-    }
-  }, [isAuthenticated]);
-
-  const container = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const item = {
-    hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1, transition: { duration: 0.5 } }
-  };
-
-  const features = [
-    {
-      icon: <LayoutDashboard className="w-6 h-6" />,
-      title: "Intuitive Dashboard",
-      description: "Clean workspace with drag-and-drop organization"
-    },
-    {
-      icon: <FileText className="w-6 h-6" />,
-      title: "Smart Templates",
-      description: "Professionally designed templates for any use case"
-    },
-    {
-      icon: <Users className="w-6 h-6" />,
-      title: "Real-time Collaboration",
-      description: "Work with your team simultaneously"
-    },
-    {
-      icon: <Sparkles className="w-6 h-6" />,
-      title: "AI Assistance",
-      description: "Generate content with AI-powered suggestions"
-    }
-  ];
-
-  const testimonials = [
-    {
-      quote: "This tool transformed how our team manages documentation. The interface is pure elegance.",
-      author: "Sarah K., Product Lead",
-      company: "StellarTech"
-    },
-    {
-      quote: "I've tried dozens of note apps - this is the first that actually makes me more productive.",
-      author: "Michael T., Engineering Director",
-      company: "Nexus Labs"
-    }
-  ];
-
   return (
-    <div className="bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
-      <section className="min-h-screen flex items-center justify-center px-4 py-20">
-        <div className="max-w-7xl mx-auto text-center">
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="flex flex-col items-center"
-          >
-            <motion.div variants={item}>
-              <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-300 text-sm font-medium mb-8">
-                <Sparkles className="w-4 h-4" />
-                Now with AI assistance
-              </span>
-            </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Navigation */}
+      <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+            <span className="text-white font-bold text-lg">L</span>
+          </div>
+          <span className="font-bold text-gray-900 text-xl">Lexora.ai</span>
+        </div>
+        <div className="hidden md:flex space-x-8">
+          <a href="#features" className="text-gray-600 hover:text-indigo-600">Features</a>
+          <a href="#testimonials" className="text-gray-600 hover:text-indigo-600">Case Studies</a>
+          <a href="#pricing" className="text-gray-600 hover:text-indigo-600">Pricing</a>
+        </div>
+        <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition duration-300">
+          Request Demo
+        </button>
+      </nav>
 
-            <motion.h1 
-              variants={item}
-              className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight max-w-3xl mx-auto"
-            >
-              Where Thoughts Become <span className="bg-gradient-to-r from-blue-600 to-emerald-600 bg-clip-text text-transparent">Organized Action</span>
-            </motion.h1>
-            
-            <motion.p 
-              variants={item}
-              className="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-            >
-              The modern workspace for focused thinking, collaborative creation, and effortless organization. 
-              Designed for clarity and productivity.
-            </motion.p>
-            
-            <motion.div variants={item} className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-              <RegisterLink>
-                <Button 
-                  size="lg" 
-                  className="px-8 py-6 text-lg bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 transition-all"
-                >
-                  Get Started Free
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </RegisterLink>
-            </motion.div>
-            
-          </motion.div>
-        </div>
-      </section>
-      <section className="py-20 px-4 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-3xl md:text-4xl font-bold"
-            >
-              Designed for Deep Work
-            </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="mt-4 text-gray-600 dark:text-gray-400"
-            >
-              Thoughtfully crafted tools that disappear when you need to focus
-            </motion.p>
+      {/* Hero Section */}
+      <section className="py-20 px-4 max-w-7xl mx-auto text-center">
+        <div className="max-w-3xl mx-auto">
+          <div className="inline-flex items-center bg-indigo-50 px-4 py-1 rounded-full mb-4">
+            <span className="text-indigo-700 font-medium">AI-Powered Contract Intelligence</span>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow"
-              >
-                <div className="text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 p-3 rounded-lg w-fit">
-                  {feature.icon}
-                </div>
-                <h3 className="mt-6 text-xl font-semibold">{feature.title}</h3>
-                <p className="mt-2 text-gray-600 dark:text-gray-400">
-                  {feature.description}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="py-20 px-4 bg-gray-50 dark:bg-gray-950">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-3xl md:text-4xl font-bold"
-            >
-              Loved by innovative teams
-            </motion.h2>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-gray-100 dark:border-gray-800"
-              >
-                <div className="text-2xl font-light italic text-gray-800 dark:text-gray-200">
-                  {testimonial.quote}
-                </div>
-                <div className="mt-6">
-                  <div className="font-medium">{testimonial.author}</div>
-                  <div className="text-gray-600 dark:text-gray-400">{testimonial.company}</div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="py-28 px-4">
-        <div className="max-w-4xl mx-auto text-center bg-gradient-to-br from-blue-50 to-emerald-50 dark:from-blue-900/30 dark:to-emerald-900/30 rounded-3xl p-12">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Ready to transform your workflow?
-            </h2>
-            <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-xl mx-auto">
-              Join thousands of professionals who have elevated their productivity
-            </p>
-            <div className="mt-10">
-              <RegisterLink>
-                <Button 
-                  size="lg" 
-                  className="px-8 py-6 text-lg bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700 transition-all"
-                >
-                  Get Started Free
-                </Button>
-              </RegisterLink>
-            </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-gray-600 dark:text-gray-400 text-sm">
-              <div className="flex items-center">
-                <Check className="w-4 h-4 mr-2 text-emerald-500" />
-                No credit card required
-              </div>
-              <div className="flex items-center">
-                <Check className="w-4 h-4 mr-2 text-emerald-500" />
-                14-day free trial
-              </div>
-              <div className="flex items-center">
-                <Check className="w-4 h-4 mr-2 text-emerald-500" />
-                Cancel anytime
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-      <footer className="py-12 px-4 border-t border-gray-200 dark:border-gray-800">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            © {new Date().getFullYear()} NotesApp. All rights reserved.
+          <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
+            Automate Legal Contract Review
+          </h1>
+          <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+            Lexora uses advanced AI to analyze, audit, and extract risk insights from thousands of contracts in minutes - not weeks.
           </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-lg transition duration-300 text-lg font-medium">
+              Schedule Enterprise Demo
+            </button>
+            <button className="border border-gray-300 hover:border-indigo-600 text-gray-700 hover:text-indigo-600 px-8 py-4 rounded-lg transition duration-300 text-lg font-medium">
+              Technical Documentation
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Trusted By Section */}
+      <div className="py-10 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <p className="text-center text-gray-500 mb-8">Trusted by legal teams at</p>
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 items-center justify-center">
+            {['Fortune 500 Company', 'Global Law Firm', 'Insurance Leader', 'Healthcare Group', 'Tech Unicorn'].map((company) => (
+              <div key={company} className="text-center text-gray-400 font-medium">
+                {company}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Features Section */}
+      <section id="features" className="py-20 px-4 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Enterprise Contract Intelligence</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Built by legal ops veterans and AI researchers for high-volume contract management
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-10">
+          {features.map((feature, idx) => (
+            <div key={idx} className="bg-white p-8 rounded-xl shadow-sm border border-gray-100">
+              <div className="w-12 h-12 bg-indigo-50 rounded-lg mb-6 flex items-center justify-center">
+                {feature.icon}
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">{feature.title}</h3>
+              <p className="text-gray-600 mb-4">{feature.description}</p>
+              <div className="mt-4">
+                <a href="#" className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center">
+                  Learn more <ArrowRightIcon className="ml-2 h-4 w-4" />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section id="testimonials" className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Trusted by Legal Innovators</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              How leading legal teams are transforming contract management
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {testimonials.map((testimonial, idx) => (
+              <div key={idx} className="bg-white p-8 rounded-xl shadow-sm">
+                <p className="text-gray-600 italic mb-6">"{testimonial.quote}"</p>
+                <div className="flex items-center">
+                  <div className="mr-4">
+                    <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-gray-900">{testimonial.name}</p>
+                    <p className="text-gray-600">{testimonial.title}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-5xl mx-auto bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-12 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">Ready to automate your contract review?</h2>
+          <p className="text-indigo-100 text-xl mb-8 max-w-3xl mx-auto">
+            Schedule a private demo to see how Lexora can reduce contract review time by 85% with our AI-powered platform
+          </p>
+          <button className="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-4 rounded-lg text-lg font-medium transition duration-300">
+            Request Enterprise Demo
+          </button>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 bg-gray-900 text-gray-400">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">L</span>
+                </div>
+                <span className="font-bold text-white text-xl">Lexora.ai</span>
+              </div>
+              <p className="mb-4">AI contract intelligence for enterprise legal teams</p>
+              <p>San Francisco & Tel Aviv</p>
+            </div>
+            
+            {footerLinks.map((section, idx) => (
+              <div key={idx}>
+                <h3 className="text-white font-medium mb-6">{section.title}</h3>
+                <ul className="space-y-4">
+                  {section.links.map((link, linkIdx) => (
+                    <li key={linkIdx}>
+                      <a href="#" className="hover:text-white transition-colors">{link}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          
+          <div className="border-t border-gray-800 mt-12 pt-8 text-sm">
+            <div className="flex flex-col md:flex-row justify-between items-center">
+              <p>© 2023 Lexora, Inc. All rights reserved.</p>
+              <div className="flex space-x-6 mt-4 md:mt-0">
+                <a href="#" className="hover:text-white">Privacy Policy</a>
+                <a href="#" className="hover:text-white">Terms of Service</a>
+                <a href="#" className="hover:text-white">Security</a>
+              </div>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
   );
 }
+
+// Feature data
+const features = [
+  {
+    icon: <DocumentMagnifyingGlassIcon className="h-6 w-6 text-indigo-600" />,
+    title: "Clause Extraction & Tagging",
+    description: "Automatically identify and classify clauses across thousands of contracts using GPT-4 and custom AI models"
+  },
+  {
+    icon: <ShieldCheckIcon className="h-6 w-6 text-indigo-600" />,
+    title: "Risk Detection",
+    description: "Flag non-standard language, regulatory risks, and unfavorable terms with explainable AI scoring"
+  },
+  {
+    icon: <BuildingLibraryIcon className="h-6 w-6 text-indigo-600" />,
+    title: "Bulk Audit & Compliance",
+    description: "Conduct portfolio-wide compliance audits across your entire contract repository in minutes"
+  }
+];
+
+// Testimonial data
+const testimonials = [
+  {
+    quote: "Lexora reduced our contract review time from 3 weeks to 2 days. The AI caught risks our junior associates missed.",
+    name: "Sarah Johnson",
+    title: "General Counsel, Fortune 500 Tech Company"
+  },
+  {
+    quote: "The semantic search capability alone saved us 200+ hours in our last compliance audit. Worth every penny.",
+    name: "Michael Chen",
+    title: "Head of Legal Ops, Global Insurance Firm"
+  }
+];
+
+// Footer links
+const footerLinks = [
+  {
+    title: "Product",
+    links: ["Features", "Security", "Enterprise", "Status"]
+  },
+  {
+    title: "Solutions",
+    links: ["Legal Teams", "Compliance", "Due Diligence", "M&A"]
+  },
+  {
+    title: "Company",
+    links: ["About", "Blog", "Careers", "Contact"]
+  }
+];
