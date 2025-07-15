@@ -12,8 +12,8 @@ import {
   BarChart,
   Database,
   Cloud,
-  Check,
   ChevronRight,
+  Mail,
   Loader2
 } from "lucide-react";
 import { useState } from "react";
@@ -113,11 +113,6 @@ export default function Home() {
           </div>
           <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
         </div>
-        <div className="hidden md:flex space-x-8">
-          <a href="#solutions" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Solutions</a>
-          <a href="#features" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Features</a>
-          <a href="#testimonials" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Testimonials</a>
-        </div>
         <Button 
           variant="outline"
           className="border-gray-800 dark:border-[#424245] text-gray-900 dark:text-[#f5f5f7] hover:bg-gray-50 dark:hover:bg-[#1d1d1f]"
@@ -165,13 +160,6 @@ export default function Home() {
                 >
                   Request Enterprise Demo
                 </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  className="border-[#d2d2d7] dark:border-[#424245] text-[#1d1d1f] dark:text-[#f5f5f7] hover:bg-[#f5f5f7] dark:hover:bg-[#1d1d1f] px-8 py-6 text-base"
-                >
-                  View Technical Specs
-                </Button>
               </motion.div>
             </div>
             
@@ -191,33 +179,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
-      {/* Trusted By Section */}
-      <div className="py-12 bg-[#f5f5f7] dark:bg-[#1d1d1f] border-t border-b border-[#d2d2d7] dark:border-[#424245]">
-        <div className="max-w-7xl mx-auto px-4">
-          <p className="text-center text-[#86868b] dark:text-[#a1a1a6] mb-10 text-sm uppercase tracking-wider">Trusted by legal teams at</p>
-          <div className="grid grid-cols-3 md:grid-cols-5 gap-8 items-center justify-center">
-            {[
-              { name: "Global Law Firm", class: "text-lg" },
-              { name: "Fortune 500", class: "text-xl font-medium" },
-              { name: "Insurance Leader", class: "text-lg" },
-              { name: "Healthcare Group", class: "text-lg" },
-              { name: "Tech Unicorn", class: "text-xl font-medium" }
-            ].map((company, index) => (
-              <motion.div 
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`text-center text-[#1d1d1f] dark:text-[#f5f5f7] ${company.class}`}
-              >
-                {company.name}
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Enterprise Solutions Section */}
       <section id="solutions" className="py-20 px-4 bg-white dark:bg-black">
@@ -239,7 +200,7 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mt-4 text-[#86868b] dark:text-[#a1a1a6] max-w-2xl mx-auto"
             >
-              AI-powered tools designed for complex enterprise legal operations
+              AI-powered tools for complex legal operations
             </motion.p>
           </div>
 
@@ -306,7 +267,7 @@ export default function Home() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mt-4 text-[#86868b] dark:text-[#a1a1a6]"
             >
-              AI-powered capabilities designed for enterprise legal teams
+              AI-powered capabilities for enterprise legal teams
             </motion.p>
           </div>
 
@@ -390,7 +351,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-[#1d1d1f] dark:text-[#f5f5f7]">
-              Transform Your Contract Review Process
+              Transform Your Contract Review
             </h2>
             <p className="mt-4 text-[#86868b] dark:text-[#a1a1a6] max-w-xl mx-auto">
               See how Lexora can reduce contract review time by 85% with AI-powered intelligence
@@ -403,20 +364,6 @@ export default function Home() {
                 Request Enterprise Demo
               </Button>
             </div>
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-[#86868b] dark:text-[#a1a1a6] text-sm">
-              <div className="flex items-center">
-                <Check className="w-4 h-4 mr-2 text-[#86868b] dark:text-[#a1a1a6]" />
-                Enterprise-grade security
-              </div>
-              <div className="flex items-center">
-                <Check className="w-4 h-4 mr-2 text-[#86868b] dark:text-[#a1a1a6]" />
-                SOC 2 & GDPR compliant
-              </div>
-              <div className="flex items-center">
-                <Check className="w-4 h-4 mr-2 text-[#86868b] dark:text-[#a1a1a6]" />
-                Dedicated support
-              </div>
-            </div>
           </motion.div>
         </div>
       </section>
@@ -424,46 +371,36 @@ export default function Home() {
       {/* Footer */}
       <footer className="py-12 px-4 border-t border-[#d2d2d7] dark:border-[#424245] bg-white dark:bg-black">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
-            <div className="md:col-span-2">
+          <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+            <div className="flex-1">
               <div className="flex items-center space-x-3 mb-6">
                 <div className="w-8 h-8 bg-gray-900 dark:bg-[#f5f5f7] rounded-lg flex items-center justify-center">
                   <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
                 </div>
                 <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
               </div>
-              <p className="mb-4 text-[#86868b] dark:text-[#a1a1a6] max-w-md">
+              <p className="text-[#86868b] dark:text-[#a1a1a6] max-w-md">
                 AI contract intelligence for enterprise legal teams
               </p>
-              <p className="text-[#86868b] dark:text-[#a1a1a6]">San Francisco & Tel Aviv</p>
             </div>
             
-            {[
-              { title: "Product", links: ["Features", "Security", "Solutions", "Pricing"] },
-              { title: "Resources", links: ["Documentation", "API", "Compliance", "Blog"] },
-              { title: "Company", links: ["About", "Careers", "Contact", "Partners"] }
-            ].map((section, idx) => (
-              <div key={idx}>
-                <h3 className="text-[#1d1d1f] dark:text-[#f5f5f7] font-medium mb-6">{section.title}</h3>
-                <ul className="space-y-4">
-                  {section.links.map((link, linkIdx) => (
-                    <li key={linkIdx}>
-                      <a href="#" className="text-[#86868b] dark:text-[#a1a1a6] hover:text-[#0071e3] transition-colors">
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+            <div className="flex-1">
+              <Button 
+                variant="outline"
+                className="border-[#d2d2d7] dark:border-[#424245] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
+              >
+                <Mail className="mr-2 h-4 w-4" />
+                Contact Sales
+              </Button>
+            </div>
           </div>
           
           <div className="border-t border-[#d2d2d7] dark:border-[#424245] mt-12 pt-8 text-sm text-[#86868b] dark:text-[#a1a1a6]">
             <div className="flex flex-col md:flex-row justify-between items-center">
-              <p>© 2023 Lexora, Inc. All rights reserved.</p>
+              <p>© 2024 Lexora, Inc. All rights reserved.</p>
               <div className="flex space-x-6 mt-4 md:mt-0">
                 <a href="#" className="hover:text-[#0071e3] transition-colors">Privacy</a>
-                <a href="#" className="hover:text-[#0071e3] transition-colors">Terms</a>
                 <a href="#" className="hover:text-[#0071e3] transition-colors">Security</a>
               </div>
             </div>
