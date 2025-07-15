@@ -6,7 +6,6 @@ import {
   LoginLink,
 } from "@kinde-oss/kinde-auth-nextjs/components";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { UserNav } from "./UserNav";
 
 export async function Navbar() {
   const { isAuthenticated, getUser } = getKindeServerSession();
@@ -23,24 +22,7 @@ export async function Navbar() {
 
         <div className="flex items-center gap-x-5">
           <ThemeToggle />
-
-          {(await isAuthenticated()) ? (
-            <UserNav
-              email={user?.email as string}
-              image={user?.picture as string}
-              name={user?.given_name as string}
-            />
-          ) : (
-            <div className="flex items-center gap-x-5">
-              <LoginLink>
-                <Button>Sign In</Button>
-              </LoginLink>
-
-              <RegisterLink>
-                <Button variant="secondary">Sign Up</Button>
-              </RegisterLink>
-            </div>
-          )}
+          
         </div>
       </div>
     </nav>
