@@ -105,22 +105,31 @@ export default function Home() {
 
   return (
     <div className="bg-gradient-to-b from-[#fbfbfd] to-[#ffffff] dark:from-[#000000] dark:to-[#0a0a0a]">
-      {/* Navigation */}
-      <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
-        <div className="flex items-center space-x-3">
-          <div className="w-8 h-8 bg-gray-900 dark:bg-[#f5f5f7] rounded-lg flex items-center justify-center">
-            <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/80 dark:bg-black/80 backdrop-blur-md border-b border-[#d2d2d7] dark:border-[#424245]">
+        <nav className="flex items-center justify-between p-6 max-w-7xl mx-auto">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gray-900 dark:bg-[#f5f5f7] rounded-lg flex items-center justify-center">
+              <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
+            </div>
+            <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
           </div>
-          <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
-        </div>
-        <Button 
-          variant="outline"
-          className="border-gray-800 dark:border-[#424245] text-gray-900 dark:text-[#f5f5f7] hover:bg-gray-50 dark:hover:bg-[#1d1d1f]"
-          onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
-        >
-          Request Demo
-        </Button>
-      </nav>
+          
+          <div className="hidden md:flex space-x-8">
+            <a href="#solutions" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Solutions</a>
+            <a href="#features" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Features</a>
+            <a href="#testimonials" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Testimonials</a>
+          </div>
+          
+          <Button 
+            variant="outline"
+            className="border-gray-800 dark:border-[#424245] text-gray-900 dark:text-[#f5f5f7] hover:bg-gray-50 dark:hover:bg-[#1d1d1f]"
+            onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
+          >
+            Request Demo
+          </Button>
+        </nav>
+      </header>
 
       {/* Hero Section */}
       <section className="min-h-[80vh] flex items-center justify-center px-4 py-12 md:py-20">
