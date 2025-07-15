@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import { motion } from "framer-motion";
@@ -15,9 +16,11 @@ import {
   ChevronRight,
   Mail,
   Loader2,
-  Zap
+  Zap,
+  Check
 } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
@@ -93,7 +96,7 @@ export default function Home() {
 
   const testimonials = [
     {
-      quote: "Lexora reduced contract review time from 3 weeks to 2 days. The AI caught risks our associates missed.",
+      quote: "Legalynx reduced contract review time from 3 weeks to 2 days. The AI caught risks our associates missed.",
       author: "Sarah Johnson",
       company: "General Counsel, Fortune 500"
     },
@@ -114,7 +117,7 @@ export default function Home() {
               <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
+              <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Legalynx.ai</span>
               <div className="inline-flex items-center bg-[#f5f5f7] dark:bg-[#1d1d1f] px-2 py-0.5 rounded-full text-[10px] text-[#86868b] dark:text-[#a1a1a6] mt-0.5">
                 <Zap className="w-3 h-3 mr-1 text-amber-500" />
                 Beta
@@ -128,13 +131,14 @@ export default function Home() {
             <a href="#testimonials" className="text-gray-600 dark:text-[#86868b] hover:text-gray-900 dark:hover:text-[#f5f5f7] transition-colors">Testimonials</a>
           </div>
           
-          <Button 
-            variant="outline"
-            className="border-gray-800 dark:border-[#424245] text-gray-900 dark:text-[#f5f5f7] hover:bg-gray-50 dark:hover:bg-[#1d1d1f]"
-            onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
-          >
-            Request Demo
-          </Button>
+          <Link href="/demo">
+            <Button 
+              variant="outline"
+              className="border-gray-800 dark:border-[#424245] text-gray-900 dark:text-[#f5f5f7] hover:bg-gray-50 dark:hover:bg-[#1d1d1f]"
+            >
+              Request Demo
+            </Button>
+          </Link>
         </nav>
       </header>
 
@@ -167,21 +171,22 @@ export default function Home() {
                 variants={item}
                 className="mt-6 text-lg md:text-xl text-[#86868b] dark:text-[#a1a1a6] max-w-2xl"
               >
-                Lexora helps legal teams analyze, audit, and extract insights from thousands of contracts using AI-powered intelligence.
+                Legalynx helps legal teams analyze, audit, and extract insights from thousands of contracts using AI-powered intelligence.
               </motion.p>
               
               <motion.div variants={item} className="mt-10 flex flex-col sm:flex-row gap-4">
-                <Button 
-                  size="lg" 
-                  className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors flex items-center group"
-                  onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
-                >
-                  Request Enterprise Demo
-                  <div className="ml-3 inline-flex items-center bg-white/20 px-2 py-0.5 rounded-full text-xs">
-                    <Zap className="w-3 h-3 mr-1 group-hover:animate-pulse" />
-                    Beta Access
-                  </div>
-                </Button>
+                <Link href="/demo">
+                  <Button 
+                    size="lg" 
+                    className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors flex items-center group"
+                  >
+                    Request Enterprise Demo
+                    <div className="ml-3 inline-flex items-center bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                      <Zap className="w-3 h-3 mr-1 group-hover:animate-pulse" />
+                      Beta Access
+                    </div>
+                  </Button>
+                </Link>
               </motion.div>
             </div>
             
@@ -196,7 +201,7 @@ export default function Home() {
                 </div>
                 <div className="bg-[#f5f5f7] dark:bg-[#1d1d1f] w-full h-96 flex items-center justify-center">
                   <div className="text-center p-8">
-                    <div className="text-4xl font-bold mb-4 text-[#1d1d1f] dark:text-[#f5f5f7]">Lexora.ai</div>
+                    <div className="text-4xl font-bold mb-4 text-[#1d1d1f] dark:text-[#f5f5f7]">Legalynx.ai</div>
                     <div className="text-[#86868b] dark:text-[#a1a1a6]">AI Contract Intelligence Platform</div>
                   </div>
                 </div>
@@ -260,20 +265,21 @@ export default function Home() {
                     <p className="mt-3 text-[#86868b] dark:text-[#a1a1a6]">
                       {solution.description}
                     </p>
-                    <button
-                      type="button"
-                      className="mt-6 flex items-center text-[#86868b] dark:text-[#a1a1a6] group-hover:text-[#0071e3] transition-colors cursor-pointer"
-                      onClick={scrollToCTA}
-                    >
-                      {isLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <>
-                          <span className="text-sm font-medium">Learn more</span>
-                          <ChevronRight className="ml-1 w-4 h-4" />
-                        </>
-                      )}
-                    </button>
+                    <Link href="/demo">
+                      <button
+                        type="button"
+                        className="mt-6 flex items-center text-[#86868b] dark:text-[#a1a1a6] group-hover:text-[#0071e3] transition-colors cursor-pointer"
+                      >
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <>
+                            <span className="text-sm font-medium">Learn more</span>
+                            <ChevronRight className="ml-1 w-4 h-4" />
+                          </>
+                        )}
+                      </button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
@@ -398,19 +404,21 @@ export default function Home() {
               Transform Your Contract Review
             </h2>
             <p className="mt-4 text-[#86868b] dark:text-[#a1a1a6] max-w-xl mx-auto">
-              Join our beta program to experience Lexoras AI-powered contract intelligence
+              Join our beta program to experience Legalynxs AI-powered contract intelligence
             </p>
             <div className="mt-10">
-              <Button 
-                size="lg" 
-                className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors flex items-center justify-center mx-auto group"
-              >
-                Request Beta Access
-                <div className="ml-3 inline-flex items-center bg-white/20 px-2 py-0.5 rounded-full text-xs">
-                  <Zap className="w-3 h-3 mr-1 group-hover:animate-pulse" />
-                  Early Access
-                </div>
-              </Button>
+              <Link href="/demo">
+                <Button 
+                  size="lg" 
+                  className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors flex items-center justify-center mx-auto group"
+                >
+                  Request Beta Access
+                  <div className="ml-3 inline-flex items-center bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                    <Zap className="w-3 h-3 mr-1 group-hover:animate-pulse" />
+                    Early Access
+                  </div>
+                </Button>
+              </Link>
             </div>
           </motion.div>
         </div>
@@ -426,7 +434,7 @@ export default function Home() {
                   <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
                 </div>
                 <div>
-                  <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
+                  <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Legalynx.ai</span>
                   <div className="inline-flex items-center bg-[#f5f5f7] dark:bg-[#1d1d1f] px-2 py-0.5 rounded-full text-[10px] text-[#86868b] dark:text-[#a1a1a6] mt-0.5">
                     Beta
                   </div>
@@ -438,20 +446,21 @@ export default function Home() {
             </div>
             
             <div className="flex-1">
-              <Button 
-                variant="outline"
-                className="border-[#d2d2d7] dark:border-[#424245] text-[#1d1d1f] dark:text-[#f5f5f7]"
-                onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
-              >
-                <Mail className="mr-2 h-4 w-4" />
-                Contact Sales
-              </Button>
+              <Link href="/demo">
+                <Button 
+                  variant="outline"
+                  className="border-[#d2d2d7] dark:border-[#424245] text-[#1d1d1f] dark:text-[#f5f5f7]"
+                >
+                  <Mail className="mr-2 h-4 w-4" />
+                  Contact Sales
+                </Button>
+              </Link>
             </div>
           </div>
           
           <div className="border-t border-[#d2d2d7] dark:border-[#424245] mt-12 pt-8 text-sm text-[#86868b] dark:text-[#a1a1a6]">
             <div className="flex flex-col md:flex-row justify-between items-center">
-              <p>© 2024 Lexora, Inc. All rights reserved.</p>
+              <p>© 2024 Legalynx, Inc. All rights reserved.</p>
               <div className="flex space-x-6 mt-4 md:mt-0">
                 <a href="#" className="hover:text-[#0071e3] transition-colors">Privacy</a>
                 <a href="#" className="hover:text-[#0071e3] transition-colors">Security</a>
