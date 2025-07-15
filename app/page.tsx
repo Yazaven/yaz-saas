@@ -13,10 +13,22 @@ import {
   Database,
   Cloud,
   Check,
-  ChevronRight
+  ChevronRight,
+  Loader2
 } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const scrollToCTA = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' });
+      setIsLoading(false);
+    }, 300);
+  };
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -109,7 +121,7 @@ export default function Home() {
         <Button 
           variant="outline"
           className="border-gray-800 dark:border-[#424245] text-gray-900 dark:text-[#f5f5f7] hover:bg-gray-50 dark:hover:bg-[#1d1d1f]"
-          onClick={() => window.location.href = "#cta"}
+          onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
         >
           Request Demo
         </Button>
@@ -149,7 +161,7 @@ export default function Home() {
                 <Button 
                   size="lg" 
                   className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors"
-                  onClick={() => window.location.href = "#cta"}
+                  onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
                 >
                   Request Enterprise Demo
                 </Button>
@@ -170,7 +182,7 @@ export default function Home() {
               <div className="bg-gradient-to-br from-[#f5f5f7] to-[#ffffff] dark:from-[#1d1d1f] dark:to-[#000000] border border-[#d2d2d7] dark:border-[#424245] rounded-2xl overflow-hidden shadow-lg">
                 <div className="bg-[#f5f5f7] dark:bg-[#1d1d1f] w-full h-96 flex items-center justify-center">
                   <div className="text-center p-8">
-                    <div className="text-4xl font-bold mb-4">Lexora.ai</div>
+                    <div className="text-4xl font-bold mb-4 text-[#1d1d1f] dark:text-[#f5f5f7]">Lexora.ai</div>
                     <div className="text-[#86868b] dark:text-[#a1a1a6]">AI Contract Intelligence Platform</div>
                   </div>
                 </div>
@@ -252,10 +264,20 @@ export default function Home() {
                     <p className="mt-3 text-[#86868b] dark:text-[#a1a1a6]">
                       {solution.description}
                     </p>
-                    <div className="mt-6 flex items-center text-[#86868b] dark:text-[#a1a1a6] group-hover:text-[#0071e3] transition-colors">
-                      <span className="text-sm font-medium">Learn more</span>
-                      <ChevronRight className="ml-1 w-4 h-4" />
-                    </div>
+                    <button
+                      type="button"
+                      className="mt-6 flex items-center text-[#86868b] dark:text-[#a1a1a6] group-hover:text-[#0071e3] transition-colors cursor-pointer"
+                      onClick={scrollToCTA}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <>
+                          <span className="text-sm font-medium">Learn more</span>
+                          <ChevronRight className="ml-1 w-4 h-4" />
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </motion.div>
