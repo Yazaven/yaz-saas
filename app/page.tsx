@@ -14,7 +14,8 @@ import {
   Cloud,
   ChevronRight,
   Mail,
-  Loader2
+  Loader2,
+  Zap
 } from "lucide-react";
 import { useState } from "react";
 
@@ -112,7 +113,13 @@ export default function Home() {
             <div className="w-8 h-8 bg-gray-900 dark:bg-[#f5f5f7] rounded-lg flex items-center justify-center">
               <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
             </div>
-            <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
+            <div className="flex flex-col">
+              <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
+              <div className="inline-flex items-center bg-[#f5f5f7] dark:bg-[#1d1d1f] px-2 py-0.5 rounded-full text-[10px] text-[#86868b] dark:text-[#a1a1a6] mt-0.5">
+                <Zap className="w-3 h-3 mr-1 text-amber-500" />
+                Beta
+              </div>
+            </div>
           </div>
           
           <div className="hidden md:flex space-x-8">
@@ -141,10 +148,12 @@ export default function Home() {
             className="flex flex-col lg:flex-row items-center gap-16"
           >
             <div className="lg:w-1/2">
-              <motion.div variants={item}>
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f5f5f7] dark:bg-[#1d1d1f] text-[#86868b] dark:text-[#a1a1a6] text-sm font-medium mb-6">
-                  AI-Powered Contract Intelligence
-                </span>
+              <motion.div variants={item} className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#f5f5f7] dark:bg-[#1d1d1f] text-[#86868b] dark:text-[#a1a1a6] text-sm font-medium mb-6">
+                <span>AI-Powered Contract Intelligence</span>
+                <div className="inline-flex items-center bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full text-xs text-amber-800 dark:text-amber-200">
+                  <Zap className="w-3 h-3 mr-1" />
+                  Beta
+                </div>
               </motion.div>
 
               <motion.h1 
@@ -164,10 +173,14 @@ export default function Home() {
               <motion.div variants={item} className="mt-10 flex flex-col sm:flex-row gap-4">
                 <Button 
                   size="lg" 
-                  className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors"
+                  className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors flex items-center group"
                   onClick={() => document.getElementById('cta')?.scrollIntoView({behavior: 'smooth'})}
                 >
                   Request Enterprise Demo
+                  <div className="ml-3 inline-flex items-center bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                    <Zap className="w-3 h-3 mr-1 group-hover:animate-pulse" />
+                    Beta Access
+                  </div>
                 </Button>
               </motion.div>
             </div>
@@ -176,7 +189,11 @@ export default function Home() {
               variants={item}
               className="lg:w-1/2 w-full mt-12 lg:mt-0"
             >
-              <div className="bg-gradient-to-br from-[#f5f5f7] to-[#ffffff] dark:from-[#1d1d1f] dark:to-[#000000] border border-[#d2d2d7] dark:border-[#424245] rounded-2xl overflow-hidden shadow-lg">
+              <div className="relative bg-gradient-to-br from-[#f5f5f7] to-[#ffffff] dark:from-[#1d1d1f] dark:to-[#000000] border border-[#d2d2d7] dark:border-[#424245] rounded-2xl overflow-hidden shadow-lg">
+                <div className="absolute top-4 right-4 inline-flex items-center bg-amber-100 dark:bg-amber-900/30 px-3 py-1 rounded-full text-xs text-amber-800 dark:text-amber-200 z-10">
+                  <Zap className="w-3 h-3 mr-1" />
+                  Preview
+                </div>
                 <div className="bg-[#f5f5f7] dark:bg-[#1d1d1f] w-full h-96 flex items-center justify-center">
                   <div className="text-center p-8">
                     <div className="text-4xl font-bold mb-4 text-[#1d1d1f] dark:text-[#f5f5f7]">Lexora.ai</div>
@@ -193,15 +210,20 @@ export default function Home() {
       <section id="solutions" className="py-20 px-4 bg-white dark:bg-black">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <motion.h2 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="text-3xl md:text-4xl font-bold text-[#1d1d1f] dark:text-[#f5f5f7]"
-            >
-              Enterprise Legal Solutions
-            </motion.h2>
+            <div className="inline-flex items-center justify-center">
+              <motion.h2 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+                className="text-3xl md:text-4xl font-bold text-[#1d1d1f] dark:text-[#f5f5f7]"
+              >
+                Enterprise Legal Solutions
+              </motion.h2>
+              <div className="ml-4 inline-flex items-center bg-[#e6f4ff] dark:bg-[#0d2946] px-3 py-1 rounded-full text-xs text-[#0071e3]">
+                Beta Features
+              </div>
+            </div>
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -221,8 +243,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white dark:bg-[#1d1d1f] p-8 rounded-xl border border-[#d2d2d7] dark:border-[#424245] shadow-sm hover:shadow-md transition-all group"
+                className="bg-white dark:bg-[#1d1d1f] p-8 rounded-xl border border-[#d2d2d7] dark:border-[#424245] shadow-sm hover:shadow-md transition-all group relative"
               >
+                <div className="absolute top-4 right-4 inline-flex items-center bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 rounded-full text-[10px] text-amber-800 dark:text-amber-200">
+                  Beta
+                </div>
+                
                 <div className="flex items-start">
                   <div className="mt-0.5">
                     {solution.icon}
@@ -259,7 +285,7 @@ export default function Home() {
       {/* Features Section */}
       <section id="features" className="py-20 px-4 bg-[#f5f5f7] dark:bg-[#1d1d1f]">
         <div className="max-w-7xl mx-auto">
-          <div className="max-w-3xl mx-auto mb-16">
+          <div className="max-w-3xl mx-auto mb-16 text-center">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -288,8 +314,12 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-white dark:bg-black p-6 rounded-xl border border-[#d2d2d7] dark:border-[#424245]"
+                className="bg-white dark:bg-black p-6 rounded-xl border border-[#d2d2d7] dark:border-[#424245] relative"
               >
+                <div className="absolute top-3 right-3 inline-flex items-center bg-[#e6f4ff] dark:bg-[#0d2946] px-2 py-0.5 rounded-full text-[10px] text-[#0071e3]">
+                  Beta
+                </div>
+                
                 <div className="text-[#0071e3]">
                   {feature.icon}
                 </div>
@@ -359,18 +389,27 @@ export default function Home() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
+            <div className="inline-flex items-center justify-center bg-[#e6f4ff] dark:bg-[#0d2946] px-4 py-1 rounded-full text-sm text-[#0071e3] mb-6">
+              <Zap className="w-4 h-4 mr-2" />
+              Limited Beta Access Available
+            </div>
+            
             <h2 className="text-3xl md:text-4xl font-bold text-[#1d1d1f] dark:text-[#f5f5f7]">
               Transform Your Contract Review
             </h2>
             <p className="mt-4 text-[#86868b] dark:text-[#a1a1a6] max-w-xl mx-auto">
-              See how Lexora can reduce contract review time by 85% with AI-powered intelligence
+              Join our beta program to experience Lexoras AI-powered contract intelligence
             </p>
             <div className="mt-10">
               <Button 
                 size="lg" 
-                className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors"
+                className="bg-[#0071e3] hover:bg-[#0062c4] text-white px-8 py-6 text-base transition-colors flex items-center justify-center mx-auto group"
               >
-                Request Enterprise Demo
+                Request Beta Access
+                <div className="ml-3 inline-flex items-center bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                  <Zap className="w-3 h-3 mr-1 group-hover:animate-pulse" />
+                  Early Access
+                </div>
               </Button>
             </div>
           </motion.div>
@@ -386,7 +425,12 @@ export default function Home() {
                 <div className="w-8 h-8 bg-gray-900 dark:bg-[#f5f5f7] rounded-lg flex items-center justify-center">
                   <span className="text-white dark:text-gray-900 font-bold text-lg">L</span>
                 </div>
-                <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
+                <div>
+                  <span className="font-bold text-gray-900 dark:text-[#f5f5f7] text-xl">Lexora.ai</span>
+                  <div className="inline-flex items-center bg-[#f5f5f7] dark:bg-[#1d1d1f] px-2 py-0.5 rounded-full text-[10px] text-[#86868b] dark:text-[#a1a1a6] mt-0.5">
+                    Beta
+                  </div>
+                </div>
               </div>
               <p className="text-[#86868b] dark:text-[#a1a1a6] max-w-md">
                 AI contract intelligence for enterprise legal teams
