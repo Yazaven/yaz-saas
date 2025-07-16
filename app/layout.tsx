@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./components/theme-provider";
+import { Navbar } from "./components/Navbar";
 import prisma from "./lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { unstable_noStore as noStore } from "next/cache";
@@ -39,13 +40,15 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
+        className={`${inter.className} ${data?.colorScheme ?? "theme-orange"}`}
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="Light"
+          defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>
