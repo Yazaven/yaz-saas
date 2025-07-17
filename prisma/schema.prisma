@@ -26,6 +26,7 @@ model Contract {
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
 model User {
   id               String        @id @unique
   name             String?
@@ -34,6 +35,8 @@ model User {
   colorScheme      String        @default("theme-orange")
   Subscription     Subscription?
   Notes            Note[]
+  Contract         Contract[]      // Added missing relation field
+  ContractAnalysis ContractAnalysis[] // Added missing relation field
 }
 
 model Subscription {
@@ -48,6 +51,7 @@ model Subscription {
   user                 User     @relation(fields: [userId], references: [id])
   userId               String   @unique
 }
+
 model ContractAnalysis {
   id             String   @id @default(cuid())
   title          String
