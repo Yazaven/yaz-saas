@@ -20,6 +20,16 @@ type ContractAnalysisItem = {
   analysisResult: string; // This is a JSON string, not the AnalysisResult object
 };
 
+// Define the type for what we get from the database query
+type DatabaseContractAnalysis = {
+  id: string;
+  title: string;
+  analysisResult: string; // Database returns string
+  riskScore: number | null;
+  status: string;
+  createdAt: Date;
+};
+
 async function getData(userId: string) {
   noStore();
   const data = await prisma.user.findUnique({
@@ -141,7 +151,7 @@ export default async function DashboardPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-y-4">
-          {data?.ContractAnalysis.map((item: ContractAnalysisItem) => (
+          {data?.ContractAnalysis.map((item: DatabaseContractAnalysis) => (
             <Card
               key={item.id}
               className="flex items-center justify-between p-4 hover:shadow-md transition-shadow"
@@ -201,7 +211,7 @@ export default async function DashboardPage() {
               <h3 className="font-semibold">High Risk</h3>
             </div>
             <p className="text-2xl font-bold mt-2">
-              {data.ContractAnalysis.filter((item: ContractAnalysisItem) => (item.riskScore || 0) >= 70).length}
+              {data.ContractAnalysis.filter((item: DatabaseContractAnalysis) => (item.riskScore || 0) >= 70).length}
             </p>
           </Card>
 
@@ -211,7 +221,7 @@ export default async function DashboardPage() {
               <h3 className="font-semibold">Low Risk</h3>
             </div>
             <p className="text-2xl font-bold mt-2">
-              {data.ContractAnalysis.filter((item: ContractAnalysisItem) => (item.riskScore || 0) < 40).length}
+              {data.ContractAnalysis.filter((item: DatabaseContractAnalysis) => (item.riskScore || 0) < 40).length}
             </p>
           </Card>
         </div>
