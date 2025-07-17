@@ -19,7 +19,6 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { SubmitB } from "@/components/ui/Submitbuttons";
-import { getApiUrl, testApiConnection, makeApiRequest } from "@/lib/api-config";
 
 // Define minimal Risk interface to fix TS error
 interface Risk {
@@ -39,17 +38,16 @@ interface ApiResponse {
   };
 }
 
-// Helper function to get API URL with fallback (moved outside component)
+// Helper function to get API URL with fallback
 function getApiUrlFallback(): string {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
                  process.env.API_URL || 
                  'http://localhost:8000';
   
-  // Ensure no trailing slash
   return baseUrl.replace(/\/$/, '');
 }
 
-// Helper function to test API connectivity (moved outside component)
+// Helper function to test API connectivity
 async function testApiConnectionFallback(): Promise<boolean> {
   try {
     const response = await fetch(`${getApiUrlFallback()}/health`, {
@@ -63,6 +61,70 @@ async function testApiConnectionFallback(): Promise<boolean> {
     console.error('API connection test failed:', error);
     return false;
   }
+}
+
+// Helper function to create fallback analysis
+function createFallbackAnalysis(analysisType: string) {
+  return {
+    success: true,
+    analysis_type: analysisType || 'full',
+    result: {
+      risk_score: 50,
+      risks: [{
+        risk: "API unavailable - using fallback analysis",
+        severity: "Medium",
+        location: "System",
+        recommendation: "Ensure API server is running"
+      }],
+      clauses: ["Unable to analyze clauses - API unavailable"],
+      compliance_issues: [],
+      summary: "Contract analysis unavailable due to API connection issues",
+      recommendations: ["Ensure API server is running", "Check network connectivity"]
+    }
+  };
+}
+
+// Helper function to calculate risk score
+function calculateRiskScore(analysisResult: ApiResponse): number {
+  if (analysisResult.result?.risk_score) {
+    return analysisResult.result.risk_score;
+  }
+  
+  if (analysisResult.result?.risks && Array.isArray(analysisResult.result.risks)) {
+    const risks: Risk[] = analysisResult.result.risks;
+    const highRisks = risks.filter(r => r.severity === 'High').length;
+    const mediumRisks = risks.filter(r => r.severity === 'Medium').length;
+    const lowRisks = risks.filter(r => r.severity === 'Low').length;
+    
+    return Math.min(100, (highRisks * 30) + (mediumRisks * 15) + (lowRisks * 5));
+  }
+  
+  return 50; // Default risk score
+}
+
+// Helper function to save analysis to database
+async function saveAnalysisToDatabase(
+  user: any,
+  title: string,
+  contractText: string,
+  analysisType: string,
+  analysisResult: any,
+  riskScore: number
+) {
+  const contractAnalysis = await prisma.contractAnalysis.create({
+    data: {
+      userId: user.id,
+      title: title,
+      contractText: contractText,
+      analysisType: analysisType || 'full',
+      analysisResult: JSON.stringify(analysisResult),
+      riskScore: Math.max(0, Math.min(100, riskScore)),
+      status: 'completed'
+    },
+  });
+
+  console.log('Analysis saved to database:', contractAnalysis.id);
+  return contractAnalysis;
 }
 
 export default async function NewContractAnalysisRoute() {
@@ -97,53 +159,27 @@ export default async function NewContractAnalysisRoute() {
     if (!isApiConnected) {
       console.error('API connection failed. Using fallback analysis.');
       
-      // Fallback analysis if API is not available
-      const fallbackAnalysis = {
-        success: true,
-        analysis_type: analysisType || 'full',
-        result: {
-          risk_score: 50,
-          risks: [{
-            risk: "API unavailable - using fallback analysis",
-            severity: "Medium",
-            location: "System",
-            recommendation: "Ensure API server is running"
-          }],
-          clauses: ["Unable to analyze clauses - API unavailable"],
-          compliance_issues: [],
-          summary: "Contract analysis unavailable due to API connection issues",
-          recommendations: ["Ensure API server is running", "Check network connectivity"]
-        }
-      };
+      const fallbackAnalysis = createFallbackAnalysis(analysisType);
+      const contractAnalysis = await saveAnalysisToDatabase(
+        user,
+        title,
+        contractText,
+        analysisType,
+        fallbackAnalysis.result,
+        50
+      );
 
-      // Save fallback analysis to database
-      try {
-        const contractAnalysis = await prisma.contractAnalysis.create({
-          data: {
-            userId: user.id,
-            title: title,
-            contractText: contractText,
-            analysisType: analysisType || 'full',
-            analysisResult: JSON.stringify(fallbackAnalysis.result),
-            riskScore: 50,
-            status: 'completed'
-          },
-        });
-
-        return redirect(`/dashboard/analysis/${contractAnalysis.id}`);
-      } catch (dbError) {
-        console.error('Database error:', dbError);
-        throw new Error('Failed to save analysis to database');
-      }
+      // Let redirect bubble up - don't catch it
+      redirect(`/dashboard/analysis/${contractAnalysis.id}`);
     }
 
+    // API is available, proceed with analysis
+    console.log('Calling API analyze endpoint...');
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
     try {
-      console.log('Calling API analyze endpoint...');
-      
-      // Call FastAPI backend with timeout and retry logic
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
-      
       const response = await fetch(`${apiUrl}/analyze`, {
         method: 'POST',
         headers: {
@@ -158,7 +194,6 @@ export default async function NewContractAnalysisRoute() {
       });
 
       clearTimeout(timeoutId);
-
       console.log('API Response status:', response.status);
       
       if (!response.ok) {
@@ -170,44 +205,31 @@ export default async function NewContractAnalysisRoute() {
       const analysisResult: ApiResponse = await response.json();
       console.log('Analysis result received:', analysisResult.success);
       
-      // Calculate risk score from the analysis result
-      let riskScore = 50; // Default risk score
-      
-      if (analysisResult.result?.risk_score) {
-        riskScore = analysisResult.result.risk_score;
-      } else if (analysisResult.result?.risks && Array.isArray(analysisResult.result.risks)) {
-        // Calculate risk score based on risk severities
-        const risks: Risk[] = analysisResult.result.risks;
-        const highRisks = risks.filter(r => r.severity === 'High').length;
-        const mediumRisks = risks.filter(r => r.severity === 'Medium').length;
-        const lowRisks = risks.filter(r => r.severity === 'Low').length;
-        
-        riskScore = Math.min(100, (highRisks * 30) + (mediumRisks * 15) + (lowRisks * 5));
-      }
+      const riskScore = calculateRiskScore(analysisResult);
+      const contractAnalysis = await saveAnalysisToDatabase(
+        user,
+        title,
+        contractText,
+        analysisType,
+        analysisResult.result,
+        riskScore
+      );
 
-      // Ensure risk score is within valid range
-      riskScore = Math.max(0, Math.min(100, riskScore));
-
-      // Save analysis to database
-      const contractAnalysis = await prisma.contractAnalysis.create({
-        data: {
-          userId: user.id,
-          title: title,
-          contractText: contractText,
-          analysisType: analysisType || 'full',
-          analysisResult: JSON.stringify(analysisResult.result),
-          riskScore: riskScore,
-          status: 'completed'
-        },
-      });
-
-      console.log('Analysis saved to database:', contractAnalysis.id);
-      return redirect(`/dashboard/analysis/${contractAnalysis.id}`);
+      // Let redirect bubble up - don't catch it
+      redirect(`/dashboard/analysis/${contractAnalysis.id}`);
 
     } catch (error) {
+      clearTimeout(timeoutId);
+      
+      // IMPORTANT: Don't catch NEXT_REDIRECT errors
+      if (error && typeof error === 'object' && 'digest' in error) {
+        // This is a Next.js redirect, let it bubble up
+        throw error;
+      }
+      
       console.error('Analysis failed:', error);
       
-      // Determine error type and provide specific error message
+      // Handle other errors
       let errorMessage = 'Failed to analyze contract. Please try again.';
       
       if (error instanceof Error) {
@@ -281,7 +303,6 @@ export default async function NewContractAnalysisRoute() {
               </p>
             </div>
 
-            {/* File Upload Section */}
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <div className="flex flex-col items-center gap-2">
                 <svg className="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -296,7 +317,6 @@ export default async function NewContractAnalysisRoute() {
               </div>
             </div>
 
-            {/* API Status Indicator */}
             <div className="text-xs text-gray-500 flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               API Endpoint: {getApiUrlFallback()}
@@ -312,7 +332,6 @@ export default async function NewContractAnalysisRoute() {
         </form>
       </Card>
 
-      {/* Analysis Types Info */}
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="text-lg">Analysis Types</CardTitle>
@@ -338,7 +357,7 @@ export default async function NewContractAnalysisRoute() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibable text-primary">Compliance Check</h4>
+              <h4 className="font-semibold text-primary">Compliance Check</h4>
               <p className="text-sm text-muted-foreground">
                 Verify compliance with relevant regulations and industry standards.
               </p>
@@ -347,7 +366,6 @@ export default async function NewContractAnalysisRoute() {
         </CardContent>
       </Card>
 
-      {/* Troubleshooting Info */}
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="text-lg">Troubleshooting</CardTitle>
