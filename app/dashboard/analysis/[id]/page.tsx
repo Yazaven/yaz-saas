@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { Risk,ContractAnalysisRequest,ComplianceIssue, AnalysisResult  } from "@/app/lib/api";
 import {Badge} from "@/components/ui/badge";
+
 interface AnalysisPageProps {
   params: {
     id: string;

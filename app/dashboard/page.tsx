@@ -10,14 +10,14 @@ import { Risk,ContractAnalysisRequest,ComplianceIssue, AnalysisResult  } from ".
 import { TrashDelete } from "../components/Submitbuttons";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-// Define the type for contract analysis items
+// Define the type for contract analysis items based on what Prisma actually returns
 type ContractAnalysisItem = {
   title: string;
   id: string;
   riskScore: number | null;
   status: string;
   createdAt: Date;
-  analysisResult: AnalysisResult | null;
+  analysisResult: string; // This is a JSON string, not the AnalysisResult object
 };
 
 async function getData(userId: string) {
