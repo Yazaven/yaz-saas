@@ -38,36 +38,36 @@ interface ApiResponse {
   };
 }
 
+// Helper function to get API URL with fallback - moved outside component
+function getApiUrl(): string {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
+                 process.env.API_URL || 
+                 'http://localhost:8000';
+  
+  // Ensure no trailing slash
+  return baseUrl.replace(/\/$/, '');
+}
+
+// Helper function to test API connectivity - moved outside component
+async function testApiConnection(): Promise<boolean> {
+  try {
+    const response = await fetch(`${getApiUrl()}/health`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('API connection test failed:', error);
+    return false;
+  }
+}
+
 export default async function NewContractAnalysisRoute() {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-
-  // Helper function to get API URL with fallback
-  function getApiUrl(): string {
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
-                   process.env.API_URL || 
-                   'http://localhost:8000';
-    
-    // Ensure no trailing slash
-    return baseUrl.replace(/\/$/, '');
-  }
-
-  // Helper function to test API connectivity
-  async function testApiConnection(): Promise<boolean> {
-    try {
-      const response = await fetch(`${getApiUrl()}/health`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      return response.ok;
-    } catch (error) {
-      console.error('API connection test failed:', error);
-      return false;
-    }
-  }
 
   async function analyzeContract(formData: FormData) {
     "use server";
@@ -298,7 +298,7 @@ export default async function NewContractAnalysisRoute() {
             {/* API Status Indicator */}
             <div className="text-xs text-gray-500 flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              API Endpoint: {getApiUrl()}
+              API Endpoint: {process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}
             </div>
           </CardContent>
 
