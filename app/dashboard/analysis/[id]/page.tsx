@@ -1,5 +1,6 @@
 // app/dashboard/analysis/[id]/page.tsx
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, CheckCircle, Clock, FileText, Shield, AlertCircle } from "lucide-react";
 import Link from "next/link";
@@ -7,8 +8,6 @@ import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
-import { Risk,ContractAnalysisRequest,ComplianceIssue, AnalysisResult  } from "@/app/lib/api";
-import {Badge} from "@/components/ui/badge";
 
 interface AnalysisPageProps {
   params: {
