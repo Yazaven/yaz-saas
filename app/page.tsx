@@ -535,7 +535,7 @@ export default function Home() {
                 </div>
                 
                 <blockquote className="text-lg italic leading-relaxed mb-6 relative z-10">
-                  "{testimonial.quote}"
+                  {testimonial.quote}
                 </blockquote>
                 
                 <div className="flex items-center">
