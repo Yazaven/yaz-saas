@@ -573,7 +573,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground"
             >
-              Choose the plan that fits your team's needs
+              Choose the plan that fits your teams needs
             </motion.p>
           </div>
 
