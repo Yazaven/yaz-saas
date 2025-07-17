@@ -114,9 +114,6 @@ export default async function DashboardPage() {
             <Button asChild>
               <Link href="/dashboard/new">Analyze New Contract</Link>
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/dashboard/bulk">Bulk Analysis</Link>
-            </Button>
           </div>
         ) : (
           <Button asChild>

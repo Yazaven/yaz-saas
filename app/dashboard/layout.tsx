@@ -91,12 +91,7 @@ export default async function DashboardLayout({
       <div className="container grid flex-1 gap-12 md:grid-cols-[240px_1fr]">
         <aside className="hidden w-[240px] flex-col md:flex">
           <div className="flex h-full max-h-screen flex-col gap-2">
-            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-              <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
-                <Shield className="h-6 w-6" />
-                <span className="">Legalynx</span>
-              </Link>
-            </div>
+            {/* ... header ... */}
             <div className="flex-1">
               <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
                 <Link
@@ -114,32 +109,11 @@ export default async function DashboardLayout({
                   New Analysis
                 </Link>
                 <Link
-                  href="/dashboard/bulk"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <FileText className="h-4 w-4" />
-                  Bulk Analysis
-                </Link>
-                <Link
-                  href="/dashboard/analytics"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <TrendingUp className="h-4 w-4" />
-                  Analytics
-                </Link>
-                <Link
                   href="/dashboard/settings"
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                 >
                   <Settings className="h-4 w-4" />
                   Settings
-                </Link>
-                <Link
-                  href="/dashboard/help"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                >
-                  <HelpCircle className="h-4 w-4" />
-                  Help & Support
                 </Link>
               </nav>
             </div>
@@ -147,7 +121,7 @@ export default async function DashboardLayout({
               <div className="rounded-lg bg-muted p-3">
                 <h3 className="font-semibold text-sm">Pro Tip</h3>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Upload multiple contracts for bulk analysis to save time.
+                  Review your contract analysis regularly for updates.
                 </p>
               </div>
             </div>
