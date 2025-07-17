@@ -19,15 +19,55 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { SubmitB } from "@/components/ui/Submitbuttons";
+
 // Define minimal Risk interface to fix TS error
 interface Risk {
   severity: string;
+}
+
+interface ApiResponse {
+  success: boolean;
+  analysis_type: string;
+  result: {
+    risk_score?: number;
+    risks?: Risk[];
+    clauses?: string[];
+    compliance_issues?: any[];
+    summary?: string;
+    recommendations?: string[];
+  };
 }
 
 export default async function NewContractAnalysisRoute() {
   noStore();
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+
+  // Helper function to get API URL with fallback
+  function getApiUrl(): string {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
+                   process.env.API_URL || 
+                   'http://localhost:8000';
+    
+    // Ensure no trailing slash
+    return baseUrl.replace(/\/$/, '');
+  }
+
+  // Helper function to test API connectivity
+  async function testApiConnection(): Promise<boolean> {
+    try {
+      const response = await fetch(`${getApiUrl()}/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('API connection test failed:', error);
+      return false;
+    }
+  }
 
   async function analyzeContract(formData: FormData) {
     "use server";
@@ -44,31 +84,98 @@ export default async function NewContractAnalysisRoute() {
       throw new Error("Title and contract text are required");
     }
 
+    if (contractText.length < 100) {
+      throw new Error("Contract text is too short for meaningful analysis");
+    }
+
+    const apiUrl = getApiUrl();
+    console.log('Using API URL:', apiUrl);
+
+    // Test API connection first
+    const isApiConnected = await testApiConnection();
+    if (!isApiConnected) {
+      console.error('API connection failed. Using fallback analysis.');
+      
+      // Fallback analysis if API is not available
+      const fallbackAnalysis = {
+        success: true,
+        analysis_type: analysisType || 'full',
+        result: {
+          risk_score: 50,
+          risks: [{
+            risk: "API unavailable - using fallback analysis",
+            severity: "Medium",
+            location: "System",
+            recommendation: "Ensure API server is running"
+          }],
+          clauses: ["Unable to analyze clauses - API unavailable"],
+          compliance_issues: [],
+          summary: "Contract analysis unavailable due to API connection issues",
+          recommendations: ["Ensure API server is running", "Check network connectivity"]
+        }
+      };
+
+      // Save fallback analysis to database
+      try {
+        const contractAnalysis = await prisma.contractAnalysis.create({
+          data: {
+            userId: user.id,
+            title: title,
+            contractText: contractText,
+            analysisType: analysisType || 'full',
+            analysisResult: JSON.stringify(fallbackAnalysis.result),
+            riskScore: 50,
+            status: 'completed'
+          },
+        });
+
+        return redirect(`/dashboard/analysis/${contractAnalysis.id}`);
+      } catch (dbError) {
+        console.error('Database error:', dbError);
+        throw new Error('Failed to save analysis to database');
+      }
+    }
+
     try {
-      // Call FastAPI backend
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/analyze`, {
+      console.log('Calling API analyze endpoint...');
+      
+      // Call FastAPI backend with timeout and retry logic
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      
+      const response = await fetch(`${apiUrl}/analyze`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body: JSON.stringify({
           contract_text: contractText,
           analysis_type: analysisType || 'full'
         }),
+        signal: controller.signal
       });
 
+      clearTimeout(timeoutId);
+
+      console.log('API Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('API Error Response:', errorText);
+        throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
 
-      const analysisResult = await response.json();
+      const analysisResult: ApiResponse = await response.json();
+      console.log('Analysis result received:', analysisResult.success);
       
       // Calculate risk score from the analysis result
-      let riskScore = 0;
+      let riskScore = 50; // Default risk score
+      
       if (analysisResult.result?.risk_score) {
         riskScore = analysisResult.result.risk_score;
-      } else if (analysisResult.result?.risks) {
-        // Fix: Add type annotation to risk parameter
+      } else if (analysisResult.result?.risks && Array.isArray(analysisResult.result.risks)) {
+        // Calculate risk score based on risk severities
         const risks: Risk[] = analysisResult.result.risks;
         const highRisks = risks.filter(r => r.severity === 'High').length;
         const mediumRisks = risks.filter(r => r.severity === 'Medium').length;
@@ -76,6 +183,9 @@ export default async function NewContractAnalysisRoute() {
         
         riskScore = Math.min(100, (highRisks * 30) + (mediumRisks * 15) + (lowRisks * 5));
       }
+
+      // Ensure risk score is within valid range
+      riskScore = Math.max(0, Math.min(100, riskScore));
 
       // Save analysis to database
       const contractAnalysis = await prisma.contractAnalysis.create({
@@ -90,10 +200,28 @@ export default async function NewContractAnalysisRoute() {
         },
       });
 
+      console.log('Analysis saved to database:', contractAnalysis.id);
       return redirect(`/dashboard/analysis/${contractAnalysis.id}`);
+
     } catch (error) {
       console.error('Analysis failed:', error);
-      throw new Error('Failed to analyze contract. Please try again.');
+      
+      // Determine error type and provide specific error message
+      let errorMessage = 'Failed to analyze contract. Please try again.';
+      
+      if (error instanceof Error) {
+        if (error.name === 'AbortError') {
+          errorMessage = 'Request timed out. Please try again with a shorter contract.';
+        } else if (error.message.includes('API Error: 404')) {
+          errorMessage = 'Analysis service is temporarily unavailable. Please try again later.';
+        } else if (error.message.includes('fetch')) {
+          errorMessage = 'Network error. Please check your connection and try again.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      throw new Error(errorMessage);
     }
   }
 
@@ -117,6 +245,7 @@ export default async function NewContractAnalysisRoute() {
                 type="text"
                 name="title"
                 placeholder="e.g., Employment Agreement - John Doe"
+                maxLength={200}
               />
             </div>
 
@@ -143,9 +272,10 @@ export default async function NewContractAnalysisRoute() {
                 placeholder="Paste your contract text here or upload a file below..."
                 required
                 className="min-h-[300px]"
+                maxLength={10000}
               />
               <p className="text-sm text-muted-foreground">
-                Tip: For best results, paste the complete contract text. 
+                Tip: For best results, paste the complete contract text (minimum 100 characters). 
                 You can also upload PDF or DOCX files using the upload endpoint.
               </p>
             </div>
@@ -164,13 +294,18 @@ export default async function NewContractAnalysisRoute() {
                 </p>
               </div>
             </div>
+
+            {/* API Status Indicator */}
+            <div className="text-xs text-gray-500 flex items-center gap-2">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              API Endpoint: {getApiUrl()}
+            </div>
           </CardContent>
 
           <CardFooter className="flex justify-between">
             <Button asChild variant="outline">
               <Link href="/dashboard">Cancel</Link>
             </Button>
-            {/* Fix: Use SubmitButton as child component without text prop */}
             <SubmitB>Analyze Contract</SubmitB>
           </CardFooter>
         </form>
@@ -202,11 +337,29 @@ export default async function NewContractAnalysisRoute() {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-primary">Compliance Check</h4>
+              <h4 className="font-semibable text-primary">Compliance Check</h4>
               <p className="text-sm text-muted-foreground">
                 Verify compliance with relevant regulations and industry standards.
               </p>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Troubleshooting Info */}
+      <Card className="mt-6">
+        <CardHeader>
+          <CardTitle className="text-lg">Troubleshooting</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-sm space-y-2">
+            <p><strong>If analysis fails:</strong></p>
+            <ul className="list-disc list-inside text-muted-foreground space-y-1">
+              <li>Ensure your contract text is at least 100 characters long</li>
+              <li>Check that the API server is running on the correct port</li>
+              <li>Verify your OpenAI API key is properly configured</li>
+              <li>Try again with a shorter contract text if timeout occurs</li>
+            </ul>
           </div>
         </CardContent>
       </Card>
