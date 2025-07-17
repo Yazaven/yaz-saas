@@ -125,7 +125,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      {data?.ContractAnalysis.length == 0 ? (
+      {data?.ContractAnalysis && data.ContractAnalysis.length === 0 ? (
         <div className="flex min-h-[400px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
             <File className="w-10 h-10 text-primary" />
@@ -195,7 +195,7 @@ export default async function DashboardPage() {
       )}
 
       {/* Quick Stats */}
-      {data?.ContractAnalysis.length > 0 && (
+      {data?.ContractAnalysis && data.ContractAnalysis.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <Card className="p-4">
             <div className="flex items-center gap-2">
