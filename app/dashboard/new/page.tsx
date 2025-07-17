@@ -19,6 +19,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { SubmitB } from "@/components/ui/Submitbuttons";
+import { getApiUrl, testApiConnection, makeApiRequest } from "@/lib/api-config";
 
 // Define minimal Risk interface to fix TS error
 interface Risk {
@@ -38,8 +39,8 @@ interface ApiResponse {
   };
 }
 
-// Helper function to get API URL with fallback - moved outside component
-function getApiUrl(): string {
+// Helper function to get API URL with fallback (moved outside component)
+function getApiUrlFallback(): string {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
                  process.env.API_URL || 
                  'http://localhost:8000';
@@ -48,10 +49,10 @@ function getApiUrl(): string {
   return baseUrl.replace(/\/$/, '');
 }
 
-// Helper function to test API connectivity - moved outside component
-async function testApiConnection(): Promise<boolean> {
+// Helper function to test API connectivity (moved outside component)
+async function testApiConnectionFallback(): Promise<boolean> {
   try {
-    const response = await fetch(`${getApiUrl()}/health`, {
+    const response = await fetch(`${getApiUrlFallback()}/health`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -88,11 +89,11 @@ export default async function NewContractAnalysisRoute() {
       throw new Error("Contract text is too short for meaningful analysis");
     }
 
-    const apiUrl = getApiUrl();
+    const apiUrl = getApiUrlFallback();
     console.log('Using API URL:', apiUrl);
 
     // Test API connection first
-    const isApiConnected = await testApiConnection();
+    const isApiConnected = await testApiConnectionFallback();
     if (!isApiConnected) {
       console.error('API connection failed. Using fallback analysis.');
       
@@ -298,7 +299,7 @@ export default async function NewContractAnalysisRoute() {
             {/* API Status Indicator */}
             <div className="text-xs text-gray-500 flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              API Endpoint: {process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}
+              API Endpoint: {getApiUrlFallback()}
             </div>
           </CardContent>
 
