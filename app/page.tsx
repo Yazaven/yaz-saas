@@ -1,38 +1,21 @@
 // app/page.tsx
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { 
-  ArrowRight, 
-  FileText, 
-  ShieldCheck,
-  Search,
-  Layers,
-  Briefcase,
-  BarChart,
-  Database,
-  Cloud,
-  ChevronRight,
-  Mail,
-  Loader2,
-  Zap,
-  Check,
-  Star,
-  Users,
-  TrendingUp,
-  Shield,
-  Globe,
-  Sparkles,
-  Play
+  ArrowRight, FileText, ShieldCheck, Search, Layers, 
+  Briefcase, BarChart, Database, Cloud, ChevronRight, 
+  Mail, Zap, Check, Star, Users, TrendingUp, 
+  Shield, Globe, Sparkles, Play, Gauge, BrainCircuit 
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeFeature, setActiveFeature] = useState(0);
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 300], [0, -50]);
   const y2 = useTransform(scrollY, [0, 300], [0, -100]);
@@ -45,14 +28,6 @@ export default function Home() {
     window.addEventListener('mousemove', updateMousePosition);
     return () => window.removeEventListener('mousemove', updateMousePosition);
   }, []);
-
-  const scrollToCTA = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      document.getElementById('cta')?.scrollIntoView({ behavior: 'smooth' });
-      setIsLoading(false);
-    }, 300);
-  };
 
   const container = {
     hidden: { opacity: 0 },
@@ -199,25 +174,54 @@ export default function Home() {
     }
   ];
 
+  // Auto-rotate features
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature(prev => (prev + 1) % features.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-secondary/5">
+    <div className="min-h-screen bg-gradient-to-b from-background to-background/50">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-4 py-12 overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
           <motion.div 
-            className="absolute inset-0 opacity-30"
+            className="absolute inset-0 opacity-20"
             style={{
-              background: `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 50%)`
+              background: `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`
             }}
+            animate={{
+              background: [
+                `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`,
+                `radial-gradient(900px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.15) 0%, transparent 80%)`,
+                `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`
+              ]
+            }}
+            transition={{ duration: 8, repeat: Infinity }}
           />
+          
           <motion.div 
             style={{ y: y1 }}
             className="absolute top-0 left-0 w-full h-full"
           >
-            <div className="absolute top-20 left-20 w-2 h-2 bg-primary/20 rounded-full animate-pulse" />
-            <div className="absolute top-40 right-40 w-3 h-3 bg-primary/30 rounded-full animate-pulse delay-1000" />
-            <div className="absolute bottom-40 left-1/3 w-1 h-1 bg-primary/40 rounded-full animate-pulse delay-2000" />
+            <motion.div 
+              className="absolute top-20 left-20 w-2 h-2 bg-primary/20 rounded-full"
+              animate={{ scale: [1, 1.5, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            />
+            <motion.div 
+              className="absolute top-40 right-40 w-3 h-3 bg-primary/30 rounded-full"
+              animate={{ scale: [1, 1.8, 1] }}
+              transition={{ duration: 4, repeat: Infinity, delay: 1 }}
+            />
+            <motion.div 
+              className="absolute bottom-40 left-1/3 w-1 h-1 bg-primary/40 rounded-full"
+              animate={{ scale: [1, 2, 1] }}
+              transition={{ duration: 5, repeat: Infinity, delay: 2 }}
+            />
           </motion.div>
         </div>
 
@@ -243,7 +247,7 @@ export default function Home() {
                 className="text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-tight"
               >
                 Transform Legal Review with{" "}
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-primary to-secondary">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
                   Enterprise AI
                 </span>
               </motion.h1>
@@ -259,7 +263,7 @@ export default function Home() {
                 <RegisterLink>
                   <Button 
                     size="lg" 
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl group"
+                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground px-8 py-6 text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl group rounded-xl"
                   >
                     Start Free Trial
                     <motion.div 
@@ -272,15 +276,16 @@ export default function Home() {
                   </Button>
                 </RegisterLink>
                 
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  className="px-8 py-6 text-lg transition-all duration-300 hover:bg-primary/10 group"
-                  onClick={scrollToCTA}
-                >
-                  <Play className="w-5 h-5 mr-2 group-hover:animate-pulse" />
-                  Watch Demo
-                </Button>
+                <LoginLink>
+                  <Button 
+                    variant="outline" 
+                    size="lg"
+                    className="px-8 py-6 text-lg transition-all duration-300 hover:bg-primary/10 group rounded-xl"
+                  >
+                    Sign In
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </LoginLink>
               </motion.div>
 
               <motion.div variants={item} className="mt-12 flex items-center gap-8 text-sm text-muted-foreground">
@@ -293,7 +298,7 @@ export default function Home() {
                   <span>10,000+ Legal Teams</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-purple-500" />
+                  <Gauge className="w-4 h-4 text-purple-500" />
                   <span>99.7% Accuracy</span>
                 </div>
               </motion.div>
@@ -325,10 +330,28 @@ export default function Home() {
                         Legalynx.ai
                       </motion.div>
                       <div className="text-muted-foreground text-lg">AI Contract Intelligence Platform</div>
-                      <div className="flex justify-center mt-6 space-x-2">
-                        <div className="w-3 h-3 bg-primary rounded-full animate-bounce" />
-                        <div className="w-3 h-3 bg-primary rounded-full animate-bounce delay-100" />
-                        <div className="w-3 h-3 bg-primary rounded-full animate-bounce delay-200" />
+                      
+                      <div className="mt-8 max-w-md mx-auto">
+                        <AnimatePresence mode="wait">
+                          <motion.div
+                            key={activeFeature}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.5 }}
+                            className="bg-background/50 p-4 rounded-xl border border-border"
+                          >
+                            <div className="flex items-center justify-center mb-2">
+                              <div className={`bg-gradient-to-r ${features[activeFeature].gradient} p-2 rounded-lg`}>
+                                {features[activeFeature].icon}
+                              </div>
+                            </div>
+                            <h3 className="font-bold">{features[activeFeature].title}</h3>
+                            <p className="text-sm text-muted-foreground mt-2">
+                              {features[activeFeature].description}
+                            </p>
+                          </motion.div>
+                        </AnimatePresence>
                       </div>
                     </div>
                   </div>
@@ -340,13 +363,13 @@ export default function Home() {
       </section>
 
       {/* Enterprise Solutions Section */}
-      <section id="solutions" className="py-24 px-4">
+      <section id="solutions" className="py-28 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-20">
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6 }}
               className="inline-flex items-center justify-center"
             >
@@ -361,7 +384,7 @@ export default function Home() {
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto"
             >
@@ -375,7 +398,7 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group relative"
               >
@@ -414,13 +437,13 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 px-4 bg-secondary/5">
+      <section id="features" className="py-28 px-4 bg-secondary/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-20 text-center">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6 }}
               className="text-4xl md:text-5xl font-bold"
             >
@@ -429,7 +452,7 @@ export default function Home() {
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground"
             >
@@ -443,11 +466,12 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="group relative"
+                whileHover={{ y: -10 }}
               >
-                <div className="bg-card/80 backdrop-blur-sm p-6 rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-primary/30 relative overflow-hidden h-full">
+                <div className={`bg-card/80 backdrop-blur-sm p-6 rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-primary/30 relative overflow-hidden h-full`}>
                   <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${feature.gradient} opacity-10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform duration-500`} />
                   
                   <div className={`text-white bg-gradient-to-r ${feature.gradient} p-3 rounded-xl w-fit mb-4`}>
@@ -468,13 +492,13 @@ export default function Home() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="py-24 px-4">
+      <section id="testimonials" className="py-28 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-20 text-center">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6 }}
               className="text-4xl md:text-5xl font-bold"
             >
@@ -483,7 +507,7 @@ export default function Home() {
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground"
             >
@@ -497,9 +521,10 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="bg-card/50 backdrop-blur-sm p-8 rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden"
+                whileHover={{ scale: 1.02 }}
               >
                 <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full -translate-y-8 translate-x-8 group-hover:scale-110 transition-transform duration-500" />
                 
@@ -529,13 +554,13 @@ export default function Home() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24 px-4 bg-secondary/5">
+      <section id="pricing" className="py-28 px-4 bg-secondary/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-20 text-center">
             <motion.h2 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6 }}
               className="text-4xl md:text-5xl font-bold"
             >
@@ -544,7 +569,7 @@ export default function Home() {
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground"
             >
@@ -558,11 +583,12 @@ export default function Home() {
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className={`relative bg-card/50 backdrop-blur-sm p-8 rounded-2xl border shadow-lg hover:shadow-xl transition-all duration-300 group ${
-                  plan.popular ? 'border-primary/50 scale-105' : 'border-border/50'
+                  plan.popular ? 'border-primary/50 scale-[1.02]' : 'border-border/50'
                 }`}
+                whileHover={{ y: -10 }}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -592,7 +618,11 @@ export default function Home() {
                 
                 <RegisterLink>
                   <Button 
-                    className={`w-full ${plan.popular ? 'bg-primary hover:bg-primary/90' : 'bg-secondary hover:bg-secondary/90'}`}
+                    className={`w-full rounded-xl ${
+                      plan.popular 
+                        ? 'bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90' 
+                        : 'bg-secondary hover:bg-secondary/90'
+                    }`}
                     size="lg"
                   >
                     {plan.name === 'Enterprise Plus' ? 'Contact Sales' : 'Get Started'}
@@ -608,13 +638,13 @@ export default function Home() {
       <section id="cta" className="py-28 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
             className="relative"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-3xl blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-3xl blur-3xl -z-10" />
             <div className="relative bg-card/50 backdrop-blur-sm border border-border/50 rounded-3xl p-12 shadow-2xl">
               <div className="inline-flex items-center justify-center bg-primary/10 px-4 py-2 rounded-full text-primary mb-8">
                 <Sparkles className="w-5 h-5 mr-2" />
@@ -632,7 +662,7 @@ export default function Home() {
                 <RegisterLink>
                   <Button 
                     size="lg" 
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-6 text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl group"
+                    className="bg-gradient-to-r from-primary to-secondary hover:from-primary/90 hover:to-secondary/90 text-primary-foreground px-8 py-6 text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl group rounded-xl"
                   >
                     Start Free Trial
                     <motion.div 
@@ -649,10 +679,10 @@ export default function Home() {
                   <Button 
                     variant="outline" 
                     size="lg"
-                    className="px-8 py-6 text-lg transition-all duration-300 hover:bg-primary/10"
+                    className="px-8 py-6 text-lg transition-all duration-300 hover:bg-primary/10 rounded-xl"
                   >
-                    <Mail className="w-5 h-5 mr-2" />
-                    Book a Demo
+                    Sign In
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </LoginLink>
               </div>

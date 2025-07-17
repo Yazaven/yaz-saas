@@ -1,3 +1,4 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -10,8 +11,8 @@ import { unstable_noStore as noStore } from "next/cache";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "",
-  description: "",
+  title: "Legalynx | AI Contract Intelligence",
+  description: "Enterprise-grade AI for legal contract analysis and management",
 };
 
 async function getData(userId: string) {
@@ -31,17 +32,16 @@ async function getData(userId: string) {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user?.id as string);
+  
   return (
-    <html lang="en">
-      <body
-        className={`${inter.className} ${data?.colorScheme ?? "theme-orange"}`}
-      >
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} ${data?.colorScheme ?? "theme-orange"} bg-background`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
