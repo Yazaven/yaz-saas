@@ -538,7 +538,7 @@ const item = {
                 </div>
                 
                 <blockquote className="text-lg italic leading-relaxed mb-6 relative z-10">
-                  "{testimonial.quote}"
+                  &quot;{testimonial.quote}&quot;
                 </blockquote>
                 
                 <div className="flex items-center">
@@ -576,7 +576,7 @@ const item = {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground"
             >
-              Choose the plan that fits your team's needs
+              Choose the plan that fits your team&apos;s needs
             </motion.p>
           </div>
 
