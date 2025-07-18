@@ -80,7 +80,7 @@ function getRiskBadge(riskScore: number) {
   }
 }
 
-export default async function DashboardPage() {
+export default async function Dashboard() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
   const data = await getData(user?.id as string);

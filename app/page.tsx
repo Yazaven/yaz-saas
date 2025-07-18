@@ -47,11 +47,10 @@ export default function Home() {
       opacity: 1, 
       transition: { 
         duration: 0.6,
-        ease: [0.25, 0.25, 0.25, 0.75]
+        ease: [0.25, 0.25, 0.25, 0.75] as const // Fixed: added type assertion
       } 
     }
   };
-
   const features = [
     {
       icon: <FileText className="w-6 h-6" />,
@@ -78,6 +77,15 @@ export default function Home() {
       gradient: "from-orange-500 to-red-500"
     }
   ];
+
+  // Auto-rotate features
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveFeature(prev => (prev + 1) % features.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [features.length]);
+
 
   const solutions = [
     {
@@ -174,34 +182,28 @@ export default function Home() {
     }
   ];
 
-  // Auto-rotate features
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveFeature(prev => (prev + 1) % features.length);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/50">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-4 py-12 overflow-hidden">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <motion.div 
-            className="absolute inset-0 opacity-20"
-            style={{
-              background: `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`
-            }}
-            animate={{
-              background: [
-                `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`,
-                `radial-gradient(900px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.15) 0%, transparent 80%)`,
-                `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`
-              ]
-            }}
-            transition={{ duration: 8, repeat: Infinity }}
-          />
+          <div className="absolute inset-0 opacity-20">
+            <motion.div 
+              className="w-full h-full"
+              style={{
+                background: `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`
+              }}
+              animate={{
+                background: [
+                  `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`,
+                  `radial-gradient(900px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.15) 0%, transparent 80%)`,
+                  `radial-gradient(800px at ${mousePosition.x}px ${mousePosition.y}px, rgba(var(--primary-rgb), 0.1) 0%, transparent 70%)`
+                ]
+              }}
+              transition={{ duration: 8, repeat: Infinity }}
+            />
+          </div>
           
           <motion.div 
             style={{ y: y1 }}
@@ -322,13 +324,14 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-secondary/10 animate-pulse" />
                   <div className="bg-card/90 backdrop-blur-sm w-full h-96 flex items-center justify-center relative">
                     <div className="text-center p-8">
-                      <motion.div 
-                        className="text-4xl font-bold mb-4 text-primary"
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                      >
-                        Legalynx.ai
-                      </motion.div>
+                      <div className="text-4xl font-bold mb-4 text-primary">
+                        <motion.span 
+                          animate={{ opacity: [0.5, 1, 0.5] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                        >
+                          Legalynx.ai
+                        </motion.span>
+                      </div>
                       <div className="text-muted-foreground text-lg">AI Contract Intelligence Platform</div>
                       
                       <div className="mt-8 max-w-md mx-auto">
@@ -535,7 +538,7 @@ export default function Home() {
                 </div>
                 
                 <blockquote className="text-lg italic leading-relaxed mb-6 relative z-10">
-                  {testimonial.quote}
+                  "{testimonial.quote}"
                 </blockquote>
                 
                 <div className="flex items-center">
@@ -573,7 +576,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground"
             >
-              Choose the plan that fits your teams needs
+              Choose the plan that fits your team's needs
             </motion.p>
           </div>
 
