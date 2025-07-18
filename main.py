@@ -362,4 +362,5 @@ async def test_endpoint():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
+>>>>>>> ab8d6465cdcbc06891f9677d77475a6fbe5f2076
     uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
