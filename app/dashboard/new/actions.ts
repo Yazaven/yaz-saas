@@ -2,7 +2,84 @@
 import prisma from "@/app/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
-import { createFallbackAnalysis, calculateRiskScore, saveAnalysisToDatabase, getApiUrlFallback, testApiConnectionFallback } from "./utils";
+
+function getApiUrlFallback(): string {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
+                 process.env.API_URL || 
+                 'http://localhost:8000';
+  return baseUrl.replace(/\/$/, '');
+}
+
+async function testApiConnectionFallback(): Promise<boolean> {
+  try {
+    const response = await fetch(`${getApiUrlFallback()}/health`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.ok;
+  } catch (error) {
+    console.error('API connection test failed:', error);
+    return false;
+  }
+}
+
+function createFallbackAnalysis(analysisType: string) {
+  return {
+    success: true,
+    analysis_type: analysisType || 'full',
+    result: {
+      risk_score: 50,
+      risks: [{
+        risk: "API unavailable - using fallback analysis",
+        severity: "Medium",
+        location: "System",
+        recommendation: "Ensure API server is running"
+      }],
+      clauses: ["Unable to analyze clauses - API unavailable"],
+      compliance_issues: [],
+      summary: "Contract analysis unavailable due to API connection issues",
+      recommendations: ["Ensure API server is running", "Check network connectivity"]
+    }
+  };
+}
+
+function calculateRiskScore(analysisResult: any): number {
+  if (analysisResult.result?.risk_score) {
+    return analysisResult.result.risk_score;
+  }
+  if (analysisResult.result?.risks && Array.isArray(analysisResult.result.risks)) {
+    const risks = analysisResult.result.risks;
+    const highRisks = risks.filter((r: any) => r.severity === 'High').length;
+    const mediumRisks = risks.filter((r: any) => r.severity === 'Medium').length;
+    const lowRisks = risks.filter((r: any) => r.severity === 'Low').length;
+    return Math.min(100, (highRisks * 30) + (mediumRisks * 15) + (lowRisks * 5));
+  }
+  return 50;
+}
+
+async function saveAnalysisToDatabase(
+  user: any,
+  title: string,
+  contractText: string,
+  analysisType: string,
+  analysisResult: any,
+  riskScore: number
+) {
+  const contractAnalysis = await prisma.contractAnalysis.create({
+    data: {
+      userId: user.id,
+      title: title,
+      contractText: contractText,
+      analysisType: analysisType || 'full',
+      analysisResult: JSON.stringify(analysisResult),
+      riskScore: Math.max(0, Math.min(100, riskScore)),
+      status: 'completed'
+    },
+  });
+  return contractAnalysis;
+}
 
 export async function analyzeContract(formData: FormData) {
   const { getUser } = getKindeServerSession();
