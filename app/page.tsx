@@ -1,4 +1,3 @@
-// app/page.tsx
 "use client";
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -12,6 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LoginLink, RegisterLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { Transition } from "framer-motion";
 
 export default function Home() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -40,17 +40,17 @@ export default function Home() {
     }
   };
 
-  const item = {
-    hidden: { y: 30, opacity: 0 },
-    show: { 
-      y: 0, 
-      opacity: 1, 
-      transition: { 
-        duration: 0.6,
-        ease: [0.25, 0.25, 0.25, 0.75] as const // Fixed: added type assertion
-      } 
-    }
-  };
+const item = {
+  hidden: { y: 30, opacity: 0 },
+  show: { 
+    y: 0, 
+    opacity: 1, 
+    transition: { 
+      duration: 0.6,
+      ease: [0.25, 0.25, 0.25, 0.75] as Transition["ease"]
+    } 
+  }
+};
   const features = [
     {
       icon: <FileText className="w-6 h-6" />,
