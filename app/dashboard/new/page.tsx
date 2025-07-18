@@ -146,10 +146,10 @@ export default function NewContractAnalysisRoute() {
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
           <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
-            <h2 className="text-lg font-semibold mb-2">Insufficient Words</h2>
-            <p className="mb-4">{modalMessage}</p>
+            <h2 className="text-lg font-semibold mb-2 text-gray-900">Insufficient Words</h2>
+            <p className="mb-4 text-gray-800">{modalMessage}</p>
             <button
-              className="bg-primary text-white px-4 py-2 rounded"
+              className="bg-primary text-black font-semibold px-4 py-2 rounded border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
               onClick={() => setShowModal(false)}
             >
               OK
