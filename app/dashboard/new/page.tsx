@@ -1,3 +1,4 @@
+"use client";
 // app/dashboard/new/page.tsx
 import React, { useState } from "react";
 import { SubmitButton } from "@/app/components/Submitbuttons";
@@ -122,27 +123,27 @@ async function saveAnalysisToDatabase(
   return contractAnalysis;
 }
 
-export default async function NewContractAnalysisRoute() {
+export default function NewContractAnalysisRoute() {
   noStore();
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+  const [showModal, setShowModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState("");
 
-  const [error, setError] = useState("");
-
-  function handleClientSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     const form = e.currentTarget;
     const contractText = (form.contractText?.value || "").trim();
-    const wordCount = contractText.split(/\s+/).filter(Boolean).length;
+    const wordCount = contractText.split(/\s+/).length;
     if (wordCount < 100) {
       e.preventDefault();
-      setError("Please enter at least 100 words in the contract text.");
-      return;
+      setModalMessage("You need to insert more than 100 words for meaningful analysis.");
+      setShowModal(true);
     }
-    setError("");
   }
 
   async function analyzeContract(formData: FormData) {
     "use server";
+
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
 
     if (!user) {
       throw new Error("Not authorized");
@@ -156,8 +157,10 @@ export default async function NewContractAnalysisRoute() {
       throw new Error("Title and contract text are required");
     }
 
-    if (contractText.length < 100) {
-      throw new Error("Contract text is too short for meaningful analysis");
+    // Count words instead of characters
+    const wordCount = contractText.trim().split(/\s+/).length;
+    if (wordCount < 100) {
+      throw new Error("Contract text must contain at least 100 words for meaningful analysis.");
     }
 
     const apiUrl = getApiUrlFallback();
@@ -252,13 +255,23 @@ export default async function NewContractAnalysisRoute() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      {error && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded shadow z-50">
-          {error}
+      {/* Modal for word count validation */}
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 max-w-sm w-full text-center">
+            <h2 className="text-lg font-semibold mb-2">Insufficient Words</h2>
+            <p className="mb-4">{modalMessage}</p>
+            <button
+              className="bg-primary text-white px-4 py-2 rounded"
+              onClick={() => setShowModal(false)}
+            >
+              OK
+            </button>
+          </div>
         </div>
       )}
       <Card>
-        <form action={analyzeContract} onSubmit={handleClientSubmit}>
+        <form action={analyzeContract} onSubmit={handleFormSubmit}>
           <CardHeader>
             <CardTitle>Analyze New Contract</CardTitle>
             <CardDescription>
