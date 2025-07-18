@@ -19,7 +19,6 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 app = FastAPI(title="Legalynx AI Contract Analysis API", version="1.0.0")
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -79,7 +78,7 @@ def extract_text_from_docx(file_content: bytes) -> str:
 
 def get_llm_chain(analysis_type: str = "full"):
     """Get LangChain LLM with appropriate prompt"""
-    openai_api_key = os.getenv("OPENAI_API_KEY")
+    openai_api_key=os.getenv("OPENAI_API_KEY")
     if not openai_api_key:
         logger.error("OpenAI API key not found")
         raise HTTPException(status_code=500, detail="OpenAI API key not configured.")
@@ -88,7 +87,7 @@ def get_llm_chain(analysis_type: str = "full"):
         llm = OpenAI(
             openai_api_key=openai_api_key,
             temperature=0,
-            model_name="gpt-4.1-mini",  
+            model_name="gpt-4.1-nano-2025-04-14",  
             max_tokens=2000
         )
     except Exception as e:
@@ -215,8 +214,7 @@ async def analyze_contract(request: ContractRequest):
     try:
         chain = get_llm_chain(request.analysis_type)
         logger.info("LLM chain created successfully")
-        
-        result = chain.run(contract=request.contract_text[:4000]) 
+        result = chain.run(contract=request.contract_text[:4000])
         logger.info("LLM analysis completed")
         
         try:
@@ -270,7 +268,7 @@ async def upload_contract(file: UploadFile = File(...)):
         logger.info(f"Text extracted successfully, length: {len(contract_text)}")
         
         chain = get_llm_chain("full")
-        result = chain.run(contract=contract_text[:4000])  
+        result = chain.run(contract=contract_text[:4000])
         
         try:
             analysis_result = json.loads(result)
@@ -307,7 +305,7 @@ async def bulk_analyze_contracts(request: BulkAnalysisRequest):
     
     for i, contract in enumerate(request.contracts):
         try:
-            result = chain.run(contract=contract["text"][:4000])  
+            result = chain.run(contract=contract["text"][:4000])
             try:
                 analysis_result = json.loads(result)
             except json.JSONDecodeError:
@@ -360,7 +358,6 @@ async def test_endpoint():
     return {"message": "Test endpoint working", "timestamp": "2025-07-17"}
 
 if __name__ == "__main__":
-    import uvicorn
     port = int(os.getenv("PORT", 8000))
->>>>>>> ab8d6465cdcbc06891f9677d77475a6fbe5f2076
+    import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=port, reload=True)
