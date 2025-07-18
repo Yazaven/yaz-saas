@@ -10,21 +10,19 @@ import { Risk,ContractAnalysisRequest,ComplianceIssue, AnalysisResult  } from ".
 import { TrashDelete } from "../components/Submitbuttons";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-// Define the type for contract analysis items based on what Prisma actually returns
 type ContractAnalysisItem = {
   title: string;
   id: string;
   riskScore: number | null;
   status: string;
   createdAt: Date;
-  analysisResult: string; // This is a JSON string, not the AnalysisResult object
+  analysisResult: string; 
 };
 
-// Define the type for what we get from the database query
 type DatabaseContractAnalysis = {
   id: string;
   title: string;
-  analysisResult: string; // Database returns string
+  analysisResult: string;
   riskScore: number | null;
   status: string;
   createdAt: Date;
@@ -191,7 +189,6 @@ export default async function Dashboard() {
         </div>
       )}
 
-      {/* Quick Stats */}
       {data?.ContractAnalysis && data.ContractAnalysis.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
           <Card className="p-4">

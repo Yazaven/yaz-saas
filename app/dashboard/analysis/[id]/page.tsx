@@ -28,7 +28,6 @@ async function getAnalysisData(analysisId: string, userId: string) {
     return null;
   }
 
-  // Parse the analysis result JSON
   let parsedResult = null;
   try {
     parsedResult = JSON.parse(analysis.analysisResult);
@@ -93,7 +92,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{analysis.title}</h1>
@@ -112,7 +110,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
         </div>
       </div>
 
-      {/* Summary Card */}
       {parsedResult?.summary && (
         <Card>
           <CardHeader>
@@ -127,9 +124,7 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
         </Card>
       )}
 
-      {/* Main Analysis Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Risks */}
         {parsedResult?.risks && parsedResult.risks.length > 0 && (
           <Card>
             <CardHeader>
@@ -163,7 +158,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
           </Card>
         )}
 
-        {/* Compliance Issues */}
         {parsedResult?.compliance_issues && parsedResult.compliance_issues.length > 0 && (
           <Card>
             <CardHeader>
@@ -198,7 +192,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
         )}
       </div>
 
-      {/* Key Clauses */}
       {parsedResult?.clauses && parsedResult.clauses.length > 0 && (
         <Card>
           <CardHeader>
@@ -219,7 +212,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
         </Card>
       )}
 
-      {/* Recommendations */}
       {parsedResult?.recommendations && parsedResult.recommendations.length > 0 && (
         <Card>
           <CardHeader>
@@ -241,7 +233,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
         </Card>
       )}
 
-      {/* Analysis Details */}
       <Card>
         <CardHeader>
           <CardTitle>Analysis Details</CardTitle>
@@ -264,7 +255,6 @@ export default async function AnalysisResultPage({ params }: AnalysisPageProps) 
         </CardContent>
       </Card>
 
-      {/* Back to Dashboard */}
       <div className="flex justify-center">
         <Button asChild variant="outline">
           <Link href="/dashboard">← Back to Dashboard</Link>

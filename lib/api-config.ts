@@ -2,21 +2,16 @@
 // Create this file in your lib directory
 
 export const API_CONFIG = {
-  // Default to localhost for development
   DEFAULT_API_URL: 'http://localhost:8000',
   
-  // Get API URL with proper fallback logic
   getApiUrl(): string {
-    // Check environment variables in order of priority
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 
                    process.env.API_URL || 
                    this.DEFAULT_API_URL;
     
-    // Ensure no trailing slash
     return apiUrl.replace(/\/$/, '');
   },
 
-  // Test API connectivity
   async testConnection(): Promise<boolean> {
     try {
       const response = await fetch(`${this.getApiUrl()}/health`, {
@@ -24,7 +19,6 @@ export const API_CONFIG = {
         headers: {
           'Content-Type': 'application/json',
         },
-        // Add timeout to prevent hanging
         signal: AbortSignal.timeout(5000)
       });
       return response.ok;
@@ -34,7 +28,6 @@ export const API_CONFIG = {
     }
   },
 
-  // Make API request with proper error handling
   async makeRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.getApiUrl()}${endpoint}`;
     
@@ -43,7 +36,6 @@ export const API_CONFIG = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      // 30 second timeout
       signal: AbortSignal.timeout(30000)
     };
 
@@ -72,7 +64,6 @@ export const API_CONFIG = {
   }
 };
 
-// Export individual functions for convenience
 export const getApiUrl = () => API_CONFIG.getApiUrl();
 export const testApiConnection = () => API_CONFIG.testConnection();
 export const makeApiRequest = <T>(endpoint: string, options?: RequestInit) => 

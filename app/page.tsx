@@ -78,7 +78,6 @@ const item = {
     }
   ];
 
-  // Auto-rotate features
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveFeature(prev => (prev + 1) % features.length);
@@ -184,9 +183,7 @@ const item = {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/50">
-      {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center px-4 py-12 overflow-hidden">
-        {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <motion.div 
@@ -365,7 +362,6 @@ const item = {
         </div>
       </section>
 
-      {/* Enterprise Solutions Section */}
       <section id="solutions" className="py-28 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-20">
@@ -438,8 +434,6 @@ const item = {
           </div>
         </div>
       </section>
-
-      {/* Features Section */}
       <section id="features" className="py-28 px-4 bg-secondary/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-20 text-center">
@@ -494,7 +488,6 @@ const item = {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section id="testimonials" className="py-28 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-20 text-center">
@@ -556,7 +549,6 @@ const item = {
         </div>
       </section>
 
-      {/* Pricing Section */}
       <section id="pricing" className="py-28 px-4 bg-secondary/5">
         <div className="max-w-7xl mx-auto">
           <div className="max-w-3xl mx-auto mb-20 text-center">
@@ -637,7 +629,6 @@ const item = {
         </div>
       </section>
 
-      {/* CTA Section */}
       <section id="cta" className="py-28 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div

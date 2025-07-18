@@ -20,7 +20,6 @@ import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { SubmitB } from "@/components/ui/Submitbuttons";
 
-// Define minimal Risk interface to fix TS error
 interface Risk {
   severity: string;
 }
@@ -38,7 +37,6 @@ interface ApiResponse {
   };
 }
 
-// Helper function to get API URL with fallback
 function getApiUrlFallback(): string {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 
                  process.env.API_URL || 
@@ -47,7 +45,6 @@ function getApiUrlFallback(): string {
   return baseUrl.replace(/\/$/, '');
 }
 
-// Helper function to test API connectivity
 async function testApiConnectionFallback(): Promise<boolean> {
   try {
     const response = await fetch(`${getApiUrlFallback()}/health`, {
@@ -63,7 +60,6 @@ async function testApiConnectionFallback(): Promise<boolean> {
   }
 }
 
-// Helper function to create fallback analysis
 function createFallbackAnalysis(analysisType: string) {
   return {
     success: true,
@@ -84,7 +80,6 @@ function createFallbackAnalysis(analysisType: string) {
   };
 }
 
-// Helper function to calculate risk score
 function calculateRiskScore(analysisResult: ApiResponse): number {
   if (analysisResult.result?.risk_score) {
     return analysisResult.result.risk_score;
@@ -99,10 +94,9 @@ function calculateRiskScore(analysisResult: ApiResponse): number {
     return Math.min(100, (highRisks * 30) + (mediumRisks * 15) + (lowRisks * 5));
   }
   
-  return 50; // Default risk score
+  return 50; 
 }
 
-// Helper function to save analysis to database
 async function saveAnalysisToDatabase(
   user: any,
   title: string,
@@ -154,7 +148,6 @@ export default async function NewContractAnalysisRoute() {
     const apiUrl = getApiUrlFallback();
     console.log('Using API URL:', apiUrl);
 
-    // Test API connection first
     const isApiConnected = await testApiConnectionFallback();
     if (!isApiConnected) {
       console.error('API connection failed. Using fallback analysis.');
@@ -169,11 +162,9 @@ export default async function NewContractAnalysisRoute() {
         50
       );
 
-      // Let redirect bubble up - don't catch it
       redirect(`/dashboard/analysis/${contractAnalysis.id}`);
     }
 
-    // API is available, proceed with analysis
     console.log('Calling API analyze endpoint...');
     
     const controller = new AbortController();
@@ -215,21 +206,17 @@ export default async function NewContractAnalysisRoute() {
         riskScore
       );
 
-      // Let redirect bubble up - don't catch it
       redirect(`/dashboard/analysis/${contractAnalysis.id}`);
 
     } catch (error) {
       clearTimeout(timeoutId);
       
-      // IMPORTANT: Don't catch NEXT_REDIRECT errors
       if (error && typeof error === 'object' && 'digest' in error) {
-        // This is a Next.js redirect, let it bubble up
         throw error;
       }
       
       console.error('Analysis failed:', error);
       
-      // Handle other errors
       let errorMessage = 'Failed to analyze contract. Please try again.';
       
       if (error instanceof Error) {

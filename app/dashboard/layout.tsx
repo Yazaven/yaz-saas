@@ -115,6 +115,13 @@ export default async function DashboardLayout({
                   <Settings className="h-4 w-4" />
                   Settings
                 </Link>
+                <Link
+                  href="/dashboard/billing"
+                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                >
+                  <Shield className="h-4 w-4" />
+                  Billing
+                </Link>
               </nav>
             </div>
             <div className="mt-auto p-4">
