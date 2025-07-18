@@ -1,7 +1,0 @@
-fastapi
-uvicorn[standard]
-python-dotenv
-langchain==0.0.350
-openai==0.28.0
-PyPDF2
-docx2txt

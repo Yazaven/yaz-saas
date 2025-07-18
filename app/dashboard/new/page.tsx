@@ -1,4 +1,5 @@
 // app/dashboard/new/page.tsx
+import React, { useState } from "react";
 import { SubmitButton } from "@/app/components/Submitbuttons";
 import { Button } from "@/components/ui/button";
 import {
@@ -126,6 +127,20 @@ export default async function NewContractAnalysisRoute() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
+  const [error, setError] = useState("");
+
+  function handleClientSubmit(e: React.FormEvent<HTMLFormElement>) {
+    const form = e.currentTarget;
+    const contractText = (form.contractText?.value || "").trim();
+    const wordCount = contractText.split(/\s+/).filter(Boolean).length;
+    if (wordCount < 100) {
+      e.preventDefault();
+      setError("Please enter at least 100 words in the contract text.");
+      return;
+    }
+    setError("");
+  }
+
   async function analyzeContract(formData: FormData) {
     "use server";
 
@@ -237,8 +252,13 @@ export default async function NewContractAnalysisRoute() {
 
   return (
     <div className="max-w-4xl mx-auto">
+      {error && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded shadow z-50">
+          {error}
+        </div>
+      )}
       <Card>
-        <form action={analyzeContract}>
+        <form action={analyzeContract} onSubmit={handleClientSubmit}>
           <CardHeader>
             <CardTitle>Analyze New Contract</CardTitle>
             <CardDescription>
