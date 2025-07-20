@@ -234,17 +234,47 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-10">Pricing</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {pricingPlans.map((plan) => (
-              <div key={plan.name} className={`rounded-xl p-6 border bg-background shadow flex flex-col items-center text-center ${plan.popular ? 'border-primary' : ''}`}>
-                <h3 className="text-xl font-semibold mb-2">{plan.name}</h3>
-                <div className="text-3xl font-bold mb-2">{plan.price}</div>
+            {pricingPlans.map((plan, idx) => (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 40, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                whileHover={{ scale: 1.04, boxShadow: '0 8px 32px rgba(0,0,0,0.12)' }}
+                transition={{ duration: 0.6, delay: idx * 0.15, type: 'spring', stiffness: 120 }}
+                className={`relative rounded-xl p-6 border bg-background shadow flex flex-col items-center text-center ${plan.popular ? 'border-primary' : ''}`}
+              >
+                {plan.popular && (
+                  <motion.span
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    className="absolute -top-5 left-1/2 -translate-x-1/2 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow"
+                  >
+                    Most Popular
+                  </motion.span>
+                )}
+                <h3 className="text-xl font-semibold mb-2 mt-2">{plan.name}</h3>
+                <motion.div
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: 0.3 }}
+                  className="text-3xl font-bold mb-2"
+                >
+                  {plan.price}
+                </motion.div>
                 <div className="text-xs text-muted-foreground mb-4">{plan.period}</div>
                 <p className="mb-4">{plan.description}</p>
                 <ul className="mb-4 text-sm text-left list-disc list-inside">
                   {plan.features.map((feature, idx) => <li key={idx}>{feature}</li>)}
                 </ul>
-                <Button size="lg" className="w-full">{plan.popular ? 'Get Started' : 'Contact Sales'}</Button>
-              </div>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: 'spring', stiffness: 200 }}
+                  className="w-full"
+                >
+                  <Button size="lg" className="w-full">{plan.popular ? 'Get Started' : 'Contact Sales'}</Button>
+                </motion.div>
+              </motion.div>
             ))}
           </div>
         </div>
