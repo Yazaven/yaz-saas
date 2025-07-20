@@ -217,7 +217,7 @@ export default function Home() {
             {testimonials.map((testimonial) => (
               <div key={testimonial.author} className="rounded-xl p-6 border bg-background shadow flex flex-col items-center text-center">
                 <div className="mb-4 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-white text-lg font-bold">{testimonial.avatar}</div>
-                <p className="italic mb-4">"{testimonial.quote}"</p>
+                <p className="italic mb-4">{testimonial.quote}</p>
                 <div className="font-semibold">{testimonial.author}</div>
                 <div className="text-xs text-muted-foreground mb-2">{testimonial.company}</div>
                 <div className="flex gap-1 justify-center">
