@@ -1,6 +1,5 @@
 "use client";
 
-// Animation note: For best browser support, use only standard CSS transitions and transforms. Avoid custom cubic-bezier or non-standard framer-motion features for critical UI.
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -49,7 +48,6 @@ const item = {
     opacity: 1, 
     transition: { 
       duration: 0.6
-      // Removed 'ease' for maximum compatibility and type safety
     } 
   }
 };
@@ -389,7 +387,7 @@ const item = {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mt-6 text-xl text-muted-foreground max-w-2xl mx-auto"
             >
-              Comprehensive AI-powered tools designed for complex legal operations and enterprise-scale challenges
+              Discover a suite of AI-powered tools designed to streamline contract workflows, reduce manual review, and empower your legal team to focus on what matters most—delivering real business value. From due diligence to compliance, our solutions are built for the challenges of modern legal operations.
             </motion.p>
           </div>
 
@@ -405,11 +403,9 @@ const item = {
               >
                 <div className="bg-card/50 backdrop-blur-sm p-8 rounded-2xl border border-border/50 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:border-primary/30 relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full -translate-y-16 translate-x-16 group-hover:scale-110 transition-transform duration-500" />
-                  
                   <div className="absolute top-4 right-4 inline-flex items-center bg-primary/10 px-2 py-1 rounded-full text-xs text-primary">
                     {solution.metrics}
                   </div>
-                  
                   <div className="flex items-start relative z-10">
                     <div className="text-primary bg-primary/10 p-3 rounded-xl">
                       {solution.icon}
@@ -421,13 +417,6 @@ const item = {
                       <p className="mt-4 text-muted-foreground text-lg leading-relaxed">
                         {solution.description}
                       </p>
-                      <motion.button
-                        whileHover={{ x: 5 }}
-                        className="mt-6 flex items-center text-primary font-medium group-hover:text-primary/80 transition-colors"
-                      >
-                        <span>Learn more</span>
-                        <ChevronRight className="ml-2 w-4 h-4" />
-                      </motion.button>
                     </div>
                   </div>
                 </div>

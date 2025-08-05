@@ -29,12 +29,11 @@ body {
   border-color: #27272A;
 }
 .bg-gradient-highlight {
-  background-image: -webkit-linear-gradient(left, #8B5CF6, #9333EA); /* Safari, Chrome */
-  background-image: -ms-linear-gradient(left, #8B5CF6, #9333EA); /* IE10+ */
+  background-image: -webkit-linear-gradient(left, #8B5CF6, #9333EA);
+  background-image: -ms-linear-gradient(left, #8B5CF6, #9333EA); 
   background-image: linear-gradient(to right, #8B5CF6, #9333EA);
 }
 
-/* Add browser prefixes for transitions and transforms */
 .animated {
   -webkit-transition: all 0.3s cubic-bezier(0.42,0,0.58,1);
   -moz-transition: all 0.3s cubic-bezier(0.42,0,0.58,1);
@@ -45,7 +44,6 @@ body {
   transform: translateZ(0);
 }
 
-/* Utility for hardware-accelerated transform for Edge/IE */
 .hw-accelerate {
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
@@ -592,7 +590,6 @@ body {
   --ring: 263.4 70% 50.4%;
 }
 
-/* Universal button and card glow hover effect */
 button, .btn, .pricing-card, .card, .glow-hover {
   transition: box-shadow 0.3s cubic-bezier(0.42,0,0.58,1), border-color 0.3s cubic-bezier(0.42,0,0.58,1), background 0.3s cubic-bezier(0.42,0,0.58,1);
   border-radius: inherit;
@@ -604,7 +601,6 @@ button:hover, .btn:hover, .pricing-card:hover, .card:hover, .glow-hover:hover {
   z-index: 2;
   border-radius: inherit;
 }
-/* Always-glow effect for the first card (e.g., Live Preview) */
 .always-glow {
   box-shadow: 0 0 0 4px rgba(139,92,246,0.25), 0 8px 32px 0 rgba(139,92,246,0.25), 0 0 16px 4px #8B5CF6;
   border-color: #8B5CF6 !important;
@@ -614,7 +610,6 @@ button:hover, .btn:hover, .pricing-card:hover, .card:hover, .glow-hover:hover {
   transition: box-shadow 0.3s cubic-bezier(0.42,0,0.58,1), border-color 0.3s cubic-bezier(0.42,0,0.58,1), background 0.3s cubic-bezier(0.42,0,0.58,1);
 }
 
-/* Most Popular badge placement improvement */
 .most-popular-badge {
   position: absolute;
   top: -1.5rem;
